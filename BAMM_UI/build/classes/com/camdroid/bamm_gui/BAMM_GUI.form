@@ -158,6 +158,9 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="jTextField1"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tf_filenameActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="b_browse">
               <Properties>
@@ -191,6 +194,9 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Run MCMC"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cb_mcmcActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel3">
               <Properties>
@@ -211,10 +217,16 @@
             </Component>
             <Component class="javax.swing.JComboBox" name="cb_model">
               <Properties>
-                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                  <Connection code="new javax.swing.DefaultComboBoxModel(new String[] { &quot;Speciation/Extinction&quot;, &quot;Item 2&quot;})" type="code"/>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                  <StringArray count="2">
+                    <StringItem index="0" value="Extinction/Speciation"/>
+                    <StringItem index="1" value="Phenotypic"/>
+                  </StringArray>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cb_modelActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JCheckBox" name="cb_init_model">
               <Properties>

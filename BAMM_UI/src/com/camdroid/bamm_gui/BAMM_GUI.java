@@ -6,6 +6,7 @@
 
 package com.camdroid.bamm_gui;
 
+import java.util.Calendar;
 import javax.swing.JOptionPane;
 
 /**
@@ -13,11 +14,14 @@ import javax.swing.JOptionPane;
  * @author cam
  */
 public class BAMM_GUI extends javax.swing.JFrame {
-
+    
+    
+    Model model;
     /**
      * Creates new form BAMM_GUI
      */
     public BAMM_GUI() {
+        model = new Model();
         initComponents();
     }
 
@@ -103,6 +107,11 @@ public class BAMM_GUI extends javax.swing.JFrame {
         jLabel1.setText("Tree: ");
 
         tf_filename.setText("jTextField1");
+        tf_filename.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tf_filenameActionPerformed(evt);
+            }
+        });
 
         b_browse.setText("Browse...");
         b_browse.addActionListener(new java.awt.event.ActionListener() {
@@ -123,6 +132,11 @@ public class BAMM_GUI extends javax.swing.JFrame {
         tf_seed.setText("jTextField2");
 
         cb_mcmc.setText("Run MCMC");
+        cb_mcmc.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cb_mcmcActionPerformed(evt);
+            }
+        });
 
         jLabel3.setText("Number of iterations: ");
 
@@ -130,7 +144,12 @@ public class BAMM_GUI extends javax.swing.JFrame {
 
         jLabel4.setText("Model: ");
 
-        cb_model.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Speciation/Extinction", "Item 2"}));
+        cb_model.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Extinction/Speciation", "Phenotypic" }));
+        cb_model.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cb_modelActionPerformed(evt);
+            }
+        });
 
         cb_init_model.setText("Initialize Model");
 
@@ -704,17 +723,27 @@ public class BAMM_GUI extends javax.swing.JFrame {
     }//GEN-LAST:event_b_browseActionPerformed
 
     private void b_writeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b_writeActionPerformed
-        // TODO add your handling code here:
+        //This will be replaced with printing to a file, rather than the terminal
+        //TODO
+        model.setTreeFile(tf_filename.getText().toString());
+        if(!cb_clock_seed.isSelected()) {
+            model.setSeed(Long.parseLong(tf_seed.getText().toString()));
+        }
+        if(cb_mcmc.isSelected()) {
+//            model.setIt
+        }
+        System.out.println(model.toString());
     }//GEN-LAST:event_b_writeActionPerformed
 
     private void cb_clock_seedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cb_clock_seedActionPerformed
         // TODO add your handling code here:
         if(cb_clock_seed.isSelected()) {
-            tf_seed.setVisible(false);
             l_seed.setVisible(false);
+            tf_seed.setVisible(false);
+            model.setSeed(Calendar.getInstance().getTimeInMillis());
         } else {
-            tf_seed.setVisible(true);
             l_seed.setVisible(true);
+            tf_seed.setVisible(true);
         }
     }//GEN-LAST:event_cb_clock_seedActionPerformed
 
@@ -746,6 +775,18 @@ public class BAMM_GUI extends javax.swing.JFrame {
         
         
     }//GEN-LAST:event_b_exitActionPerformed
+
+    private void cb_modelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cb_modelActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cb_modelActionPerformed
+
+    private void tf_filenameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tf_filenameActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tf_filenameActionPerformed
+
+    private void cb_mcmcActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cb_mcmcActionPerformed
+        model.setRunMCMC(cb_mcmc.isSelected());
+    }//GEN-LAST:event_cb_mcmcActionPerformed
 
     /**
      * @param args the command line arguments
