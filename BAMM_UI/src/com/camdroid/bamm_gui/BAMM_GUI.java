@@ -6,7 +6,9 @@
 
 package com.camdroid.bamm_gui;
 
+import com.camdroid.bamm_gui.Model.ModelType;
 import java.util.Calendar;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 /**
@@ -44,11 +46,11 @@ public class BAMM_GUI extends javax.swing.JFrame {
         tf_seed = new javax.swing.JTextField();
         jSeparator1 = new javax.swing.JSeparator();
         cb_mcmc = new javax.swing.JCheckBox();
-        jLabel3 = new javax.swing.JLabel();
+        l_iter = new javax.swing.JLabel();
         tf_iterations = new javax.swing.JTextField();
         jSeparator2 = new javax.swing.JSeparator();
         jLabel4 = new javax.swing.JLabel();
-        cb_model = new javax.swing.JComboBox();
+        s_model = new javax.swing.JComboBox();
         cb_init_model = new javax.swing.JCheckBox();
         jSeparator3 = new javax.swing.JSeparator();
         jPanel2 = new javax.swing.JPanel();
@@ -64,9 +66,9 @@ public class BAMM_GUI extends javax.swing.JFrame {
         jTable1 = new javax.swing.JTable();
         jPanel3 = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox();
         jScrollPane3 = new javax.swing.JScrollPane();
         jTable3 = new javax.swing.JTable();
+        tf_evp = new javax.swing.JTextField();
         jPanel1 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -101,12 +103,13 @@ public class BAMM_GUI extends javax.swing.JFrame {
         jTextField8 = new javax.swing.JTextField();
         b_write = new javax.swing.JButton();
         b_exit = new javax.swing.JButton();
+        jButton5 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setText("Tree: ");
 
-        tf_filename.setText("jTextField1");
+        tf_filename.setText("whaletree.tre");
         tf_filename.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tf_filenameActionPerformed(evt);
@@ -129,7 +132,12 @@ public class BAMM_GUI extends javax.swing.JFrame {
 
         l_seed.setText("Seed: ");
 
-        tf_seed.setText("jTextField2");
+        tf_seed.setText("1979");
+        tf_seed.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tf_seedActionPerformed(evt);
+            }
+        });
 
         cb_mcmc.setText("Run MCMC");
         cb_mcmc.addActionListener(new java.awt.event.ActionListener() {
@@ -138,16 +146,16 @@ public class BAMM_GUI extends javax.swing.JFrame {
             }
         });
 
-        jLabel3.setText("Number of iterations: ");
+        l_iter.setText("Number of iterations: ");
 
-        tf_iterations.setText("jTextField3");
+        tf_iterations.setText("2000000");
 
         jLabel4.setText("Model: ");
 
-        cb_model.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Extinction/Speciation", "Phenotypic" }));
-        cb_model.addActionListener(new java.awt.event.ActionListener() {
+        s_model.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Extinction/Speciation", "Phenotypic" }));
+        s_model.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cb_modelActionPerformed(evt);
+                s_modelActionPerformed(evt);
             }
         });
 
@@ -179,13 +187,13 @@ public class BAMM_GUI extends javax.swing.JFrame {
                                     .addComponent(tf_seed)))
                             .addComponent(cb_mcmc)
                             .addGroup(jp_generalLayout.createSequentialGroup()
-                                .addComponent(jLabel3)
+                                .addComponent(l_iter)
                                 .addGap(18, 18, 18)
                                 .addComponent(tf_iterations, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jp_generalLayout.createSequentialGroup()
                                 .addComponent(jLabel4)
                                 .addGap(18, 18, 18)
-                                .addComponent(cb_model, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(s_model, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(cb_init_model))
                         .addGap(0, 162, Short.MAX_VALUE))
                     .addComponent(jSeparator3))
@@ -210,14 +218,14 @@ public class BAMM_GUI extends javax.swing.JFrame {
                 .addComponent(cb_mcmc)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jp_generalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
+                    .addComponent(l_iter)
                     .addComponent(tf_iterations, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(jp_generalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(cb_model, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(s_model, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(cb_init_model)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -332,22 +340,15 @@ public class BAMM_GUI extends javax.swing.JFrame {
 
         jLabel7.setText("Event Rate Prior:");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox1ActionPerformed(evt);
-            }
-        });
-
         jTable3.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {"lambda init", null},
-                {"lambda shift", null},
-                {"mu init", null},
-                {"mu shift", null},
+                {"lambda init", "1.0"},
+                {"lambda shift", ".05"},
+                {"mu init", "1.0"},
+                {"mu shift", ".05"},
                 {"root lambda init", null},
                 {"root lambda shift", null},
-                {"root mu init", null},
+                {"root mu init", "5.0"},
                 {"root mu shift", null}
             },
             new String [] {
@@ -371,6 +372,8 @@ public class BAMM_GUI extends javax.swing.JFrame {
         });
         jScrollPane3.setViewportView(jTable3);
 
+        tf_evp.setText("1.0");
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -380,8 +383,8 @@ public class BAMM_GUI extends javax.swing.JFrame {
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jLabel7)
-                        .addGap(18, 18, 18)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(26, 26, 26)
+                        .addComponent(tf_evp, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(67, 67, 67)
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -393,7 +396,7 @@ public class BAMM_GUI extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(tf_evp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(152, Short.MAX_VALUE))
@@ -564,7 +567,7 @@ public class BAMM_GUI extends javax.swing.JFrame {
 
         jLabel12.setText("Run Info: ");
 
-        jTextField3.setText("jTextField3");
+        jTextField3.setText("run_info.txt");
 
         jButton2.setText("Browse...");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -692,6 +695,8 @@ public class BAMM_GUI extends javax.swing.JFrame {
             }
         });
 
+        jButton5.setText("Load Existing Config");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -699,6 +704,8 @@ public class BAMM_GUI extends javax.swing.JFrame {
             .addComponent(jTabbedPane1)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton5)
+                .addGap(36, 36, 36)
                 .addComponent(b_write)
                 .addGap(36, 36, 36)
                 .addComponent(b_exit, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -711,7 +718,8 @@ public class BAMM_GUI extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(b_write)
-                    .addComponent(b_exit))
+                    .addComponent(b_exit)
+                    .addComponent(jButton5))
                 .addGap(0, 56, Short.MAX_VALUE))
         );
 
@@ -719,18 +727,44 @@ public class BAMM_GUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void b_browseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b_browseActionPerformed
-        // TODO add your handling code here:
+        JFileChooser fc = new JFileChooser();
+        int returnVal = fc.showOpenDialog(this);
+        if(returnVal == JFileChooser.APPROVE_OPTION) {
+            String filename = fc.getSelectedFile().getPath();
+            tf_filename.setText(filename);
+        }
     }//GEN-LAST:event_b_browseActionPerformed
 
     private void b_writeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b_writeActionPerformed
         //This will be replaced with printing to a file, rather than the terminal
         //TODO
+        
+        if(s_model.getSelectedIndex() == 0) {
+            model.setModelType(ModelType.ESModel);
+        } else if(s_model.getSelectedIndex() == 1) {
+            model.setModelType(ModelType.Phenotypic);
+        } else {
+            //For future reference, if you add model types, set the correct type
+            // here.  For now, this line should never be reached.
+            JOptionPane.showMessageDialog(this, "Wait, how did you do that?");
+        }
+        
         model.setTreeFile(tf_filename.getText().toString());
         if(!cb_clock_seed.isSelected()) {
-            model.setSeed(Long.parseLong(tf_seed.getText().toString()));
+            try{
+                model.setSeed(Long.parseLong(tf_seed.getText().toString()));
+            } catch(NumberFormatException e) {
+                JOptionPane.showMessageDialog(this, "Invalid expression for the clock seed");
+                return;
+            }
         }
         if(cb_mcmc.isSelected()) {
-//            model.setIt
+            try{
+                long numIter = Long.parseLong(tf_iterations.getText().toString());
+            } catch(NumberFormatException e) {
+                JOptionPane.showMessageDialog(this, "Invalid expression for the number of iterations");
+                return;
+            }
         }
         System.out.println(model.toString());
     }//GEN-LAST:event_b_writeActionPerformed
@@ -750,10 +784,6 @@ public class BAMM_GUI extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBox1ActionPerformed
 
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
         // TODO add your handling code here:
@@ -776,9 +806,9 @@ public class BAMM_GUI extends javax.swing.JFrame {
         
     }//GEN-LAST:event_b_exitActionPerformed
 
-    private void cb_modelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cb_modelActionPerformed
+    private void s_modelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_s_modelActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_cb_modelActionPerformed
+    }//GEN-LAST:event_s_modelActionPerformed
 
     private void tf_filenameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tf_filenameActionPerformed
         // TODO add your handling code here:
@@ -786,7 +816,13 @@ public class BAMM_GUI extends javax.swing.JFrame {
 
     private void cb_mcmcActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cb_mcmcActionPerformed
         model.setRunMCMC(cb_mcmc.isSelected());
+        l_iter.setVisible(!cb_mcmc.isSelected());
+        tf_iterations.setVisible(!cb_mcmc.isSelected());
     }//GEN-LAST:event_cb_mcmcActionPerformed
+
+    private void tf_seedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tf_seedActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tf_seedActionPerformed
 
     /**
      * @param args the command line arguments
@@ -830,14 +866,13 @@ public class BAMM_GUI extends javax.swing.JFrame {
     private javax.swing.JCheckBox cb_clock_seed;
     private javax.swing.JCheckBox cb_init_model;
     private javax.swing.JCheckBox cb_mcmc;
-    private javax.swing.JComboBox cb_model;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JCheckBox jCheckBox2;
-    private javax.swing.JComboBox jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -848,7 +883,6 @@ public class BAMM_GUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
@@ -887,7 +921,10 @@ public class BAMM_GUI extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField7;
     private javax.swing.JTextField jTextField8;
     private javax.swing.JPanel jp_general;
+    private javax.swing.JLabel l_iter;
     private javax.swing.JLabel l_seed;
+    private javax.swing.JComboBox s_model;
+    private javax.swing.JTextField tf_evp;
     private javax.swing.JTextField tf_filename;
     private javax.swing.JTextField tf_iterations;
     private javax.swing.JTextField tf_seed;
