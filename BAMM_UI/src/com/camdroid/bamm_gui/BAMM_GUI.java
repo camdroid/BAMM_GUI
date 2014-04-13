@@ -152,7 +152,7 @@ public class BAMM_GUI extends javax.swing.JFrame {
 
         jLabel4.setText("Model: ");
 
-        s_model.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Extinction/Speciation", "Phenotypic" }));
+        s_model.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Extinction/Speciation", "Phenotypic", "Model3" }));
         s_model.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 s_modelActionPerformed(evt);
