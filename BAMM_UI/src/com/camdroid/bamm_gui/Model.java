@@ -18,6 +18,24 @@ public class Model {
     ModelType modelType;
     String treeFilename;
     boolean runMCMC;
+    boolean loadEventData = false;
+
+    public boolean getLoadEventData() {
+        return loadEventData;
+    }
+
+    public void setLoadEventData(boolean loadEventData) {
+        this.loadEventData = loadEventData;
+    }
+
+    public String getEventDataInfile() {
+        return eventDataInfile;
+    }
+
+    public void setEventDataInfile(String eventDataInfile) {
+        this.eventDataInfile = eventDataInfile;
+    }
+    String eventDataInfile;
     
     void setTreeFile(String filename) {
         treeFilename = filename;
