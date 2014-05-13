@@ -1,0 +1,4 @@
+#This is a comment and will not be read by BAMM.
+modeltype = extinctionspeciation
+treefile = whaletree.tre
+runInfoFilename = run_info.txt

@@ -6,7 +6,11 @@
 
 package com.camdroid.bamm_gui;
 
-import com.camdroid.bamm_gui.Model.ModelType;
+//import com.camdroid.bamm_gui.Model;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Calendar;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -19,6 +23,7 @@ public class BAMM_GUI extends javax.swing.JFrame {
     
     
     Model model;
+    final String FILENAME = "output.txt";
     /**
      * Creates new form BAMM_GUI
      */
@@ -86,7 +91,7 @@ public class BAMM_GUI extends javax.swing.JFrame {
         jLabel11 = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
         jLabel12 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
+        tf_runInfo = new javax.swing.JTextField();
         jButton2 = new javax.swing.JButton();
         jLabel13 = new javax.swing.JLabel();
         jTextField4 = new javax.swing.JTextField();
@@ -149,10 +154,15 @@ public class BAMM_GUI extends javax.swing.JFrame {
         l_iter.setText("Number of iterations: ");
 
         tf_iterations.setText("2000000");
+        tf_iterations.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tf_iterationsActionPerformed(evt);
+            }
+        });
 
         jLabel4.setText("Model: ");
 
-        s_model.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Extinction/Speciation", "Phenotypic", "Model3" }));
+        s_model.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Extinction/Speciation", "Phenotypic" }));
         s_model.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 s_modelActionPerformed(evt);
@@ -516,7 +526,7 @@ public class BAMM_GUI extends javax.swing.JFrame {
                     .addComponent(jLabel11))
                 .addContainerGap(463, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(36, Short.MAX_VALUE)
                 .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 570, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(24, 24, 24))
             .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -530,7 +540,7 @@ public class BAMM_GUI extends javax.swing.JFrame {
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel10)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 157, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 164, Short.MAX_VALUE)
                 .addComponent(jLabel11)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -567,7 +577,12 @@ public class BAMM_GUI extends javax.swing.JFrame {
 
         jLabel12.setText("Run Info: ");
 
-        jTextField3.setText("run_info.txt");
+        tf_runInfo.setText("run_info.txt");
+        tf_runInfo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tf_runInfoActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("Browse...");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -630,7 +645,7 @@ public class BAMM_GUI extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel5Layout.createSequentialGroup()
-                                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 406, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(tf_runInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 406, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jButton2))
                             .addGroup(jPanel5Layout.createSequentialGroup()
@@ -654,7 +669,7 @@ public class BAMM_GUI extends javax.swing.JFrame {
                 .addGap(23, 23, 23)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel12)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tf_runInfo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton2))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -736,8 +751,6 @@ public class BAMM_GUI extends javax.swing.JFrame {
     }//GEN-LAST:event_b_browseActionPerformed
 
     private void b_writeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b_writeActionPerformed
-        //This will be replaced with printing to a file, rather than the terminal
-        //TODO
         
         if(s_model.getSelectedIndex() == 0) {
             model.setModelType(ModelType.ESModel);
@@ -766,7 +779,8 @@ public class BAMM_GUI extends javax.swing.JFrame {
                 return;
             }
         }
-        System.out.println(model.toString());
+//        System.out.println(model.toString());
+        printToFile(model);
     }//GEN-LAST:event_b_writeActionPerformed
 
     private void cb_clock_seedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cb_clock_seedActionPerformed
@@ -824,6 +838,260 @@ public class BAMM_GUI extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_tf_seedActionPerformed
 
+    private void tf_runInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tf_runInfoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tf_runInfoActionPerformed
+
+    private void tf_iterationsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tf_iterationsActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tf_iterationsActionPerformed
+
+    private void printToFile(Model model) {
+        BufferedWriter writer;
+        try {
+            //Open the file
+            writer = new BufferedWriter(new FileWriter(new File(FILENAME)));
+            
+            //Start writing all the options
+            // <editor-fold defaultstate="collapsed" desc=" Section 6.2: General Options and Parameters ">
+                // <editor-fold defaultstate="collapsed" desc=" Section 6.2.1: General ">
+            //Section 6.2.1: General
+            writer.write("#This is a comment and will not be read by BAMM.");
+            writer.newLine(); //Do I really have to put writer.newLine() for each line of the file?
+            // Very tedious, but BufferedWriter doesn't seem to parse \n
+            writer.write("modeltype = " + ((model.getModelType() == ModelType.Phenotypic) ? "trait" : "extinctionspeciation"));
+            writer.newLine();
+            writer.write("treefile = " + model.getTreeFilename());
+            writer.newLine();
+            writer.write("runInfoFilename = " + tf_runInfo.getText().toString());
+            writer.newLine();
+            //TODO: What does this depend on?
+            writer.write("sampleFromPriorOnly = ");
+            writer.newLine();
+            //TODO: Again, what does this depend on?
+            writer.write("autotune = ");
+            writer.newLine();
+            writer.write("runMCMC = " + ((model.getRunMCMC() ? "1" : "0")));
+            writer.newLine();
+            //TODO
+            writer.write("simulatePriorShifts = ");
+            writer.newLine();
+            //TODO
+            writer.write("loadEventData = ");
+            writer.newLine();
+            //TODO
+            writer.write("eventDataInFile = ");
+            writer.newLine();
+            //TODO
+            writer.write("initializeModel = ");
+            writer.newLine();
+            //TODO
+            writer.write("seed = ");
+            writer.newLine();
+            //TODO
+            writer.write("overwrite = ");
+            writer.newLine();
+
+// </editor-fold>
+                // <editor-fold defaultstate="collapsed" desc=" Section 6.2.2: Priors ">
+            //Section 6.2.2: Priors
+            //TODO
+            writer.write("poissonRatePrior = ");
+            writer.newLine();
+
+            // </editor-fold>
+                // <editor-fold defaultstate="collapsed" desc=" Section 6.2.3: MCMC Simulation ">
+            if (model.getRunMCMC()) {
+                writer.write("numberGenerations = " + tf_iterations.getText().toString());
+                writer.newLine();
+                //TODO
+                writer.write("mcmcWriterFreq = ");
+                writer.newLine();
+                //TODO
+                writer.write("eventDataWriteFreq = ");
+                writer.newLine();
+                //TODO
+                writer.write("printFreq = ");
+                writer.newLine();
+                //TODO
+                writer.write("outName = ");
+                writer.newLine();
+                //TODO
+                writer.write("mcmcOutfile = ");
+                writer.newLine();
+                //TODO
+                writer.write("eventDataOutfile = ");
+                writer.newLine();
+                //TODO
+                writer.write("updateEventLocationScale = ");
+                writer.newLine();
+                //TODO
+                writer.write("updateEventRateScale = ");
+                writer.newLine();
+                //TODO
+                writer.write("localGlobalMoveRatio = ");
+                writer.newLine();
+            }
+            // </editor-fold>
+                // <editor-fold defaultstate="collapsed" desc=" Section 6.2.4: Parameter Update Rates ">
+            //TODO
+            writer.write("updateRateEventNumber = ");
+            writer.newLine();
+            //TODO
+            writer.write("updateRateEventPosition = ");
+            writer.newLine();
+            //TODO
+            writer.write("updateRateEventRate = ");
+            writer.newLine();
+            //TODO
+            writer.write("initialNumberEvents = ");
+            writer.newLine();
+            // </editor-fold>
+
+            // </editor-fold> 
+            // <editor-fold defaultstate="collapsed" desc=" Section 6.3: Speciation/Extinction Model ">
+            if(model.getModelType() == ModelType.ESModel){
+                // <editor-fold defaultstate="collapsed" desc=" Section 6.3.1: General ">
+                //TODO
+                writer.write("useGlobalSamplingProbability = ");
+                writer.newLine();
+                //TODO
+                writer.write("globalSamplingProbability = ");
+                writer.newLine();
+                //TODO
+                writer.write("sampleProbsFilename = ");
+                writer.newLine();
+                // </editor-fold>
+                // <editor-fold defaultstate="collapsed" desc=" Section 6.3.2: Priors ">
+                //TODO
+                writer.write("lambdaInitPriot = ");
+                writer.newLine();
+                //TODO
+                writer.write("lambdaInitRootPrior = ");
+                writer.newLine();
+                //TODO
+                writer.write("lambdaShiftPrior = ");
+                writer.newLine();
+                //TODO
+                writer.write("lambdaShiftRootPrior = ");
+                writer.newLine();
+                //TODO
+                writer.write("muInitPrior = ");
+                writer.newLine();
+                //TODO
+                writer.write("muInitRootPrior = ");
+                writer.newLine();
+                //TODO
+                writer.write("segLength = ");
+                writer.newLine();
+                // </editor-fold>
+                // <editor-fold defaultstate="collapsed" desc=" Section 6.3.3: MCMC Simulation ">
+                //TODO
+                writer.write("updateLambdaInitScale = ");
+                writer.newLine();
+                //TODO
+                writer.write("updateLambdaShiftScale = ");
+                writer.newLine();
+                //TODO
+                writer.write("updateMuInitScale = ");
+                writer.newLine();
+                //TODO
+                writer.write("minCladeSizeForShift = ");
+                writer.newLine();
+                // </editor-fold>
+                // <editor-fold defaultstate="collapsed" desc=" Section 6.3.4: Starting Parameters ">
+                //TODO
+                writer.write("lambdaInit0 = ");
+                writer.newLine();
+                //TODO
+                writer.write("lambdaShift0 = ");
+                writer.newLine();
+                //TODO
+                writer.write("muInit0 = ");
+                writer.newLine();
+                // </editor-fold>
+                // <editor-fold defaultstate="collapsed" desc=" Section 6.3.5: Parameter Update Rates ">
+                //TODO
+                writer.write("updateRateLambda0 = ");
+                writer.newLine();
+                //TODO
+                writer.write("updateRateLambdaShift = ");
+                writer.newLine();
+                //TODO
+                writer.write("updateRateMu0 = ");
+                writer.newLine();
+                // </editor-fold>
+            }
+            // </editor-fold>
+            // <editor-fold defaultstate="collapsed" desc=" Section 6.4: Phenotypic Evolution Model ">
+            if(model.getModelType() == ModelType.Phenotypic) {
+                // <editor-fold defaultstate="collapsed" desc=" Section 6.4.1: General ">
+                //TODO
+                writer.write("traitfile = ");
+                writer.newLine();
+                
+                // </editor-fold>
+                // <editor-fold defaultstate="collapsed" desc=" Section 6.4.2: MCMC Tuning ">
+                //TODO
+                writer.write("updateBetaScale = ");
+                writer.newLine();
+                //TODO
+                writer.write("updateNodeStateScale = ");
+                writer.newLine();
+                //TODO
+                writer.write("updateBetaShiftScale = ");
+                writer.newLine();
+                // </editor-fold>
+                // <editor-fold defaultstate="collapsed" desc=" Section 6.4.3: Starting Parameters ">
+                //TODO
+                writer.write("betaInit = ");
+                writer.newLine();
+                //TODO
+                writer.write("betaShiftInit = ");
+                writer.newLine();
+                // </editor-fold>
+                // <editor-fold defaultstate="collapsed" desc=" Section 6.4.4: Priors ">
+                //TODO
+                writer.write("betaInitPrior = ");
+                writer.newLine();
+                //TODO
+                writer.write("betaInitRootPrior = ");
+                writer.newLine();
+                //TODO
+                writer.write("betaShiftPrior = ");
+                writer.newLine();
+                //TODO
+                writer.write("betaShiftRootPrior = ");
+                writer.newLine();
+                //TODO
+                writer.write("useObservedMinMaxAsTraitPriors = ");
+                writer.newLine();
+                //TODO
+                writer.write("traitPriorMin = ");
+                writer.newLine();
+                //TODO
+                writer.write("traitPriorMax = ");
+                writer.newLine();
+                // </editor-fold>
+                // <editor-fold defaultstate="collapsed" desc=" Section 6.4.5: Parameter Update Rates ">
+                //TODO
+                writer.write("updateRateBeta0 = ");
+                writer.newLine();
+                //TODO
+                writer.write("updateRateBetaShift = ");
+                writer.newLine();
+                //TODO
+                writer.write("updateRateNodeState = ");
+                writer.newLine();
+                // </editor-fold>
+            }
+            // </editor-fold>
+            writer.close();
+        } catch(IOException ioe) {
+            ioe.printStackTrace();
+        }
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -914,7 +1182,6 @@ public class BAMM_GUI extends javax.swing.JFrame {
     private javax.swing.JTable jTable6;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jTextField5;
     private javax.swing.JTextField jTextField6;
@@ -927,6 +1194,7 @@ public class BAMM_GUI extends javax.swing.JFrame {
     private javax.swing.JTextField tf_evp;
     private javax.swing.JTextField tf_filename;
     private javax.swing.JTextField tf_iterations;
+    private javax.swing.JTextField tf_runInfo;
     private javax.swing.JTextField tf_seed;
     // End of variables declaration//GEN-END:variables
 }
