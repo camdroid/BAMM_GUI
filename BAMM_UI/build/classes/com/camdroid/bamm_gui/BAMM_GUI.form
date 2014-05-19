@@ -94,7 +94,7 @@
                                   <Group type="102" alignment="0" attributes="0">
                                       <Component id="l_iter" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                                      <Component id="tf_iterations" min="-2" max="-2" attributes="0"/>
+                                      <Component id="tf_iterations" min="-2" pref="86" max="-2" attributes="0"/>
                                   </Group>
                                   <Group type="102" alignment="0" attributes="0">
                                       <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
@@ -103,7 +103,7 @@
                                   </Group>
                                   <Component id="cb_init_model" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace min="0" pref="162" max="32767" attributes="0"/>
+                              <EmptySpace min="0" pref="176" max="32767" attributes="0"/>
                           </Group>
                           <Component id="jSeparator3" alignment="0" max="32767" attributes="0"/>
                       </Group>
@@ -146,7 +146,7 @@
                       <Component id="cb_init_model" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="jSeparator3" min="-2" pref="10" max="-2" attributes="0"/>
-                      <EmptySpace pref="50" max="32767" attributes="0"/>
+                      <EmptySpace pref="100" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -158,9 +158,6 @@
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="tf_filename">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="whaletree.tre"/>
-              </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tf_filenameActionPerformed"/>
               </Events>
@@ -187,9 +184,6 @@
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="tf_seed">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="1979"/>
-              </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tf_seedActionPerformed"/>
               </Events>
@@ -210,9 +204,6 @@
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="tf_iterations">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="2000000"/>
-              </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tf_iterationsActionPerformed"/>
               </Events>
@@ -276,13 +267,13 @@
                                       <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace type="separate" max="-2" attributes="0"/>
                                       <Component id="tf_sample_prob_file" min="-2" pref="264" max="-2" attributes="0"/>
-                                      <EmptySpace min="0" pref="45" max="32767" attributes="0"/>
+                                      <EmptySpace min="0" pref="102" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="tf_sampling_fraction" min="-2" max="-2" attributes="0"/>
-                                  <Component id="b_sample_file" min="-2" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="b_sample_file" max="32767" attributes="0"/>
+                                  <Component id="tf_sampling_fraction" max="32767" attributes="0"/>
                               </Group>
                               <EmptySpace min="-2" pref="70" max="-2" attributes="0"/>
                           </Group>
@@ -320,7 +311,7 @@
                       <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jScrollPane1" min="-2" pref="104" max="-2" attributes="0"/>
-                      <EmptySpace pref="101" max="32767" attributes="0"/>
+                      <EmptySpace pref="123" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -340,9 +331,6 @@
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="tf_sampling_fraction">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="jTextField1"/>
-              </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel5">
               <Properties>
@@ -350,9 +338,6 @@
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="tf_sample_prob_file">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="jTextField2"/>
-              </Properties>
             </Component>
             <Component class="javax.swing.JButton" name="b_sample_file">
               <Properties>
@@ -387,10 +372,10 @@
                           <Data value="mu shift"/>
                         </Column>
                         <Column editable="true" title="Value" type="java.lang.Object">
-                          <Data value=""/>
-                          <Data value="null"/>
-                          <Data value="null"/>
-                          <Data value="null"/>
+                          <Data value="0"/>
+                          <Data value="0"/>
+                          <Data value="0"/>
+                          <Data value="0"/>
                         </Column>
                       </Table>
                     </Property>
@@ -493,10 +478,10 @@
                           <Data value=".05"/>
                           <Data value="1.0"/>
                           <Data value=".05"/>
-                          <Data value="null"/>
-                          <Data value="null"/>
+                          <Data value="0"/>
+                          <Data value="0"/>
                           <Data value="5.0"/>
-                          <Data value="null"/>
+                          <Data value="0"/>
                         </Column>
                       </Table>
                     </Property>
@@ -601,7 +586,12 @@
                           <Data value="mu init scale"/>
                           <Data value="mu shift scale"/>
                         </Column>
-                        <Column editable="true" title="Value" type="java.lang.Object"/>
+                        <Column editable="true" title="Value" type="java.lang.Object">
+                          <Data value="0"/>
+                          <Data value="0"/>
+                          <Data value="0"/>
+                          <Data value="0"/>
+                        </Column>
                       </Table>
                     </Property>
                     <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
@@ -641,7 +631,11 @@
                           <Data value="Event Rate Scale"/>
                           <Data value="Local-to-Global Move Ratio"/>
                         </Column>
-                        <Column editable="true" title="Value" type="java.lang.Object"/>
+                        <Column editable="true" title="Value" type="java.lang.Object">
+                          <Data value="0"/>
+                          <Data value="0"/>
+                          <Data value="0"/>
+                        </Column>
                       </Table>
                     </Property>
                     <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
@@ -779,7 +773,12 @@
                               <Data value="Mu Init Update Rate"/>
                               <Data value="Mu Shift Update Rate"/>
                             </Column>
-                            <Column editable="true" title="Value" type="java.lang.Object"/>
+                            <Column editable="true" title="Value" type="java.lang.Object">
+                              <Data value="0"/>
+                              <Data value="0"/>
+                              <Data value="0"/>
+                              <Data value="0"/>
+                            </Column>
                           </Table>
                         </Property>
                         <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
@@ -819,7 +818,11 @@
                               <Data value="Event Location Update Rate"/>
                               <Data value="Event Rate Update Rate"/>
                             </Column>
-                            <Column editable="true" title="Value" type="java.lang.Object"/>
+                            <Column editable="true" title="Value" type="java.lang.Object">
+                              <Data value="0"/>
+                              <Data value="0"/>
+                              <Data value="0"/>
+                            </Column>
                           </Table>
                         </Property>
                         <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
@@ -876,27 +879,29 @@
                               <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="102" attributes="0">
-                                      <Component id="tf_event_data" min="-2" pref="210" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="jButton4" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
-                                      <Component id="jLabel15" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="tf_event_data_freq" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Group type="102" attributes="0">
                                       <Component id="tf_runInfo" min="-2" pref="406" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="jButton2" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <Group type="102" attributes="0">
-                                      <Component id="tf_mcmc" min="-2" pref="210" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="jButton3" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                                      <Component id="jLabel14" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="tf_mcmc_freq" min="-2" max="-2" attributes="0"/>
+                                  <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
+                                      <Group type="102" attributes="0">
+                                          <Component id="tf_event_data" min="-2" pref="210" max="-2" attributes="0"/>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Component id="jButton4" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+                                          <Component id="jLabel15" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Component id="tf_event_data_freq" pref="86" max="32767" attributes="0"/>
+                                      </Group>
+                                      <Group type="102" attributes="0">
+                                          <Component id="tf_mcmc" min="-2" pref="210" max="-2" attributes="0"/>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Component id="jButton3" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                                          <Component id="jLabel14" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Component id="tf_mcmc_freq" max="32767" attributes="0"/>
+                                      </Group>
                                   </Group>
                               </Group>
                           </Group>
@@ -904,10 +909,10 @@
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="jLabel17" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="tf_output" min="-2" max="-2" attributes="0"/>
+                              <Component id="tf_output" min="-2" pref="86" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace pref="78" max="32767" attributes="0"/>
+                      <EmptySpace pref="102" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -943,7 +948,7 @@
                           <Component id="jLabel17" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="tf_output" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="136" max="32767" attributes="0"/>
+                      <EmptySpace pref="171" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -955,9 +960,6 @@
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="tf_runInfo">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="run_info.txt"/>
-              </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tf_runInfoActionPerformed"/>
               </Events>
@@ -976,9 +978,6 @@
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="tf_mcmc">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="jTextField4"/>
-              </Properties>
             </Component>
             <Component class="javax.swing.JButton" name="jButton3">
               <Properties>
@@ -991,17 +990,11 @@
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="tf_mcmc_freq">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="jTextField5"/>
-              </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tf_mcmc_freqActionPerformed"/>
               </Events>
             </Component>
             <Component class="javax.swing.JTextField" name="tf_event_data_freq">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="jTextField5"/>
-              </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tf_event_data_freqActionPerformed"/>
               </Events>
@@ -1017,9 +1010,6 @@
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="tf_event_data">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="jTextField4"/>
-              </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tf_event_dataActionPerformed"/>
               </Events>
@@ -1043,9 +1033,6 @@
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="tf_output">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="jTextField8"/>
-              </Properties>
             </Component>
           </SubComponents>
         </Container>
