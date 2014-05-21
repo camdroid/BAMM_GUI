@@ -15,6 +15,7 @@ import java.util.Calendar;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -31,6 +32,8 @@ public class BAMM_GUI extends javax.swing.JFrame {
      */
     public BAMM_GUI() {
         model = new Model();
+        //Avoid complications later
+        model.setModelType(ModelType.ESModel);
         initComponents();
     }
 
@@ -76,12 +79,17 @@ public class BAMM_GUI extends javax.swing.JFrame {
         jScrollPane3 = new javax.swing.JScrollPane();
         t_priors = new javax.swing.JTable();
         tf_evp = new javax.swing.JTextField();
+        cb_observed_min_max = new javax.swing.JCheckBox();
+        l_min = new javax.swing.JLabel();
+        tf_observed_min = new javax.swing.JTextField();
+        l_max = new javax.swing.JLabel();
+        tf_observed_max = new javax.swing.JTextField();
         jPanel1 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
+        t_model_tuning = new javax.swing.JTable();
         jScrollPane4 = new javax.swing.JScrollPane();
-        jTable4 = new javax.swing.JTable();
+        t_tuning = new javax.swing.JTable();
         jLabel9 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         jPanel6 = new javax.swing.JPanel();
@@ -379,6 +387,25 @@ public class BAMM_GUI extends javax.swing.JFrame {
 
         tf_evp.setText("1.0");
 
+        cb_observed_min_max.setText("Use Observed Min/Max as Trait  Priors");
+        cb_observed_min_max.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cb_observed_min_maxActionPerformed(evt);
+            }
+        });
+
+        l_min.setText("Observed Min");
+        l_min.setVisible(false);
+
+        tf_observed_min.setVisible(false);
+
+        l_max.setText("Observed Max");
+        l_max.setVisible(false);
+
+        tf_observed_max.setVisible(false);
+
+        cb_observed_min_max.setVisible(false);
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -392,8 +419,22 @@ public class BAMM_GUI extends javax.swing.JFrame {
                         .addComponent(tf_evp, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(67, 67, 67)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(155, Short.MAX_VALUE))
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(cb_observed_min_max))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(39, 39, 39)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(l_max)
+                                .addGap(18, 18, 18)
+                                .addComponent(tf_observed_max, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(l_min)
+                                .addGap(18, 18, 18)
+                                .addComponent(tf_observed_min, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap(204, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -404,14 +445,24 @@ public class BAMM_GUI extends javax.swing.JFrame {
                     .addComponent(tf_evp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(152, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(cb_observed_min_max)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(l_min)
+                    .addComponent(tf_observed_min, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(l_max)
+                    .addComponent(tf_observed_max, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(44, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Priors", jPanel3);
 
         jLabel8.setText("General Tuning");
 
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+        t_model_tuning.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {"lambda init scale", "0"},
                 {"lambda shift scale", "0"},
@@ -422,9 +473,9 @@ public class BAMM_GUI extends javax.swing.JFrame {
                 "Property", "Value"
             }
         ));
-        jScrollPane2.setViewportView(jTable2);
+        jScrollPane2.setViewportView(t_model_tuning);
 
-        jTable4.setModel(new javax.swing.table.DefaultTableModel(
+        t_tuning.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {"Event Location Scale", "0"},
                 {"Event Rate Scale", "0"},
@@ -442,7 +493,7 @@ public class BAMM_GUI extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane4.setViewportView(jTable4);
+        jScrollPane4.setViewportView(t_tuning);
 
         jLabel9.setText("Model-Specific Tuning");
 
@@ -839,7 +890,91 @@ public class BAMM_GUI extends javax.swing.JFrame {
     }//GEN-LAST:event_b_exitActionPerformed
 
     private void s_modelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_s_modelActionPerformed
-        // TODO add your handling code here:
+        if(s_model.getSelectedIndex() == 0 && model.getModelType() == ModelType.Phenotypic) {
+            //Extinction/Speciation Model
+            //Starting Parameter Values
+            t_starting_values.setValueAt("Lambda Init", 0, 0);
+            t_starting_values.setValueAt("Lambda Shift Init", 1, 0);
+            ((DefaultTableModel)t_starting_values.getModel()).addRow(new Object[]{"Mu Init","0"});
+            ((DefaultTableModel)t_starting_values.getModel()).addRow(new Object[]{"Mu Shift Init","0"});
+            
+            //Priors
+            t_priors.setValueAt("Lambda Init", 0, 0);
+            t_priors.setValueAt("Lambda Shift", 1, 0);
+            t_priors.setValueAt("Mu Init", 2, 0);
+            t_priors.setValueAt("Mu Shift", 3, 0);
+            ((DefaultTableModel)t_priors.getModel()).addRow(new Object[]{"Root Lambda Init","0"});
+            ((DefaultTableModel)t_priors.getModel()).addRow(new Object[]{"Root Lambda Shift","0"});
+            ((DefaultTableModel)t_priors.getModel()).addRow(new Object[]{"Root Mu Init","0"});
+            ((DefaultTableModel)t_priors.getModel()).addRow(new Object[]{"Root Mu Shift","0"});
+            
+            //Extra Prior Settings
+            cb_observed_min_max.setVisible(false);
+            l_min.setVisible(false);
+            l_max.setVisible(false);
+            tf_observed_min.setVisible(false);
+            tf_observed_min.setVisible(false);
+            
+            //Model-Specific Tuning
+            t_model_tuning.setValueAt("Lambda Init Scale", 0, 0);
+            ((DefaultTableModel)t_model_tuning.getModel()).addRow(new Object[]{"Lambda Shift Scale","0"});
+            ((DefaultTableModel)t_model_tuning.getModel()).addRow(new Object[]{"Mu Init Scale","0"});
+            ((DefaultTableModel)t_model_tuning.getModel()).addRow(new Object[]{"Mu Shift Scale","0"});
+            
+            //Model-Specific Update Rates
+            t_model_update_rates.setValueAt("Lambda Init Scale", 0, 0);
+            t_model_update_rates.setValueAt("Lambda Shift Scale", 1, 0);
+            t_model_update_rates.setValueAt("Mu Init Scale", 2, 0);
+            ((DefaultTableModel)t_model_update_rates.getModel()).addRow(new Object[]{"Mu Shift Scale", "0"});
+        } else if(s_model.getSelectedIndex() == 1 && model.getModelType() == ModelType.ESModel) {
+            //Phenotypic Model
+            //Starting Parameter Values
+            t_starting_values.setValueAt("Beta Init", 0, 0);
+            t_starting_values.setValueAt("Beta Shift Init", 1, 0);
+            ((DefaultTableModel)t_starting_values.getModel()).removeRow(3);
+            ((DefaultTableModel)t_starting_values.getModel()).removeRow(2);
+            
+            //Priors
+            t_priors.setValueAt("Beta Init Prior", 0, 0);
+            t_priors.setValueAt("Beta Init Root Prior", 1, 0);
+            t_priors.setValueAt("Beta Shift Prior", 2, 0);
+            t_priors.setValueAt("Beta Shift Root Prior", 3, 0);
+            ((DefaultTableModel)t_priors.getModel()).removeRow(7);
+            ((DefaultTableModel)t_priors.getModel()).removeRow(6);
+            ((DefaultTableModel)t_priors.getModel()).removeRow(5);
+            ((DefaultTableModel)t_priors.getModel()).removeRow(4);
+            
+            //Extra Prior Settings
+            cb_observed_min_max.setVisible(true);
+            l_min.setVisible(true);
+            l_max.setVisible(true);
+            tf_observed_min.setVisible(true);
+            tf_observed_max.setVisible(true);
+            
+            //Model-Specific Tuning
+            t_model_tuning.setValueAt("Node State", 0, 0);
+            ((DefaultTableModel)t_model_tuning.getModel()).removeRow(3);
+            ((DefaultTableModel)t_model_tuning.getModel()).removeRow(2);
+            ((DefaultTableModel)t_model_tuning.getModel()).removeRow(1);
+            
+            //Model-Specific Update Rates
+            t_model_update_rates.setValueAt("Update Rate Beta 0", 0, 0);
+            t_model_update_rates.setValueAt("Update Rate Beta Shift", 1, 0);
+            t_model_update_rates.setValueAt("Update Rate Node State", 2, 0);
+            ((DefaultTableModel)t_model_update_rates.getModel()).removeRow(3);
+        } else {
+            //This will be reached if the user selects the option they're already on, in which case nothing should happen
+            System.out.println(s_model.getSelectedIndex());
+            System.out.println((model.getModelType() == ModelType.Phenotypic) ? "Phenotypic" : "ESModel");
+        }
+        
+        if(s_model.getSelectedIndex() == 0) {
+            model.setModelType(ModelType.ESModel);
+        } else if(s_model.getSelectedIndex() == 1) {
+            model.setModelType(ModelType.Phenotypic);
+        } else {
+            //Add on more else-ifs to add more model types
+        }
     }//GEN-LAST:event_s_modelActionPerformed
 
     private void tf_filenameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tf_filenameActionPerformed
@@ -885,6 +1020,10 @@ public class BAMM_GUI extends javax.swing.JFrame {
     private void tf_event_data_freqActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tf_event_data_freqActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_tf_event_data_freqActionPerformed
+
+    private void cb_observed_min_maxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cb_observed_min_maxActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cb_observed_min_maxActionPerformed
     private void write(String parameter, String value) {
         if(value != "null" && value != "") {
             try{
@@ -894,6 +1033,9 @@ public class BAMM_GUI extends javax.swing.JFrame {
                 ioe.printStackTrace();
             }
         }
+    }
+    private void write(String parameter, JTextField valueField) {
+        //TODO Fill this in for error-checking
     }
     private void printToFile(Model model) {
         
@@ -915,25 +1057,22 @@ public class BAMM_GUI extends javax.swing.JFrame {
             write("sampleFromPriorOnly", "");
             //TODO: Again, what does this depend on?
             write("autotune", "");
+            
             write("runMCMC", ((model.getRunMCMC() ? "1" : "0")));
             //TODO
-            write("simulatePriorShifts", "");
-            
+            write("simulatePriorShifts", "");     
             write("loadEventData", model.getLoadEventData()+"");
             if(model.getLoadEventData()) {
                 write("eventDataInFile", "");
             }
-            //TODO
-            write("initializeModel", "");
-            
+            write("initializeModel", (cb_init_model.isSelected()) ? "1" : "0");
             write("seed", (cb_clock_seed.isSelected() ? tf_seed.getText().toString() : "-1"));
             write("overwrite", (cb_overwrite.isSelected() ? "1" : "0"));
 
 // </editor-fold>
                 // <editor-fold defaultstate="collapsed" desc=" Section 6.2.2: Priors ">
             //Section 6.2.2: Priors
-            //TODO
-            write("poissonRatePrior", "");
+            write("poissonRatePrior", tf_evp.getText().toString());
 
             // </editor-fold>
                 // <editor-fold defaultstate="collapsed" desc=" Section 6.2.3: MCMC Simulation ">
@@ -942,23 +1081,17 @@ public class BAMM_GUI extends javax.swing.JFrame {
                 write("mcmcWriterFreq", tf_mcmc_freq.getText().toString());
                 write("eventDataWriteFreq", tf_event_data_freq.getText().toString());
                 write("printFreq", tf_output.getText().toString());
-                //TODO
-                write("outName", "");
-                
+                write("outName", tf_mcmc.getText().toString());
                 write("mcmcOutfile", tf_mcmc.getText().toString());
                 write("eventDataOutfile", tf_event_data.getText().toString());
-                //TODO
-                write("updateEventLocationScale", "");
-                //TODO
-                write("updateEventRateScale", "");
-                //TODO
-                write("localGlobalMoveRatio", "");
+                write("updateEventLocationScale", t_tuning.getValueAt(0, 1)+"");
+                write("updateEventRateScale", t_tuning.getValueAt(1, 1)+"");
+                write("localGlobalMoveRatio", t_tuning.getValueAt(2, 1)+"");
             }
             // </editor-fold>
                 // <editor-fold defaultstate="collapsed" desc=" Section 6.2.4: Parameter Update Rates ">
             
             write("updateRateEventNumber", t_update_rates.getValueAt(0, 1)+"");
-//            System.out.println("updateRateEventNumber = " + t_update_rates.getValueAt(0,1));
             write("updateRateEventPosition", t_update_rates.getValueAt(1,1)+"");
             write("updateRateEventRate", t_update_rates.getValueAt(2, 1)+"");
             //TODO
@@ -980,42 +1113,42 @@ public class BAMM_GUI extends javax.swing.JFrame {
                 write("lambdaShiftRootPrior", t_priors.getValueAt(5, 1) + "");
                 write("muInitPrior", t_priors.getValueAt(2, 1) + "");
                 write("muInitRootPrior", t_priors.getValueAt(6, 1) + "");
+                //TODO CWC Should these next two be included?  (Weren't specified)
+                write("muShiftPrior", t_priors.getValueAt(3, 1)+"");
+                write("muShiftRootPrior", t_priors.getValueAt(7, 1)+"");
                 //TODO
                 write("segLength", "");
                 // </editor-fold>
                 // <editor-fold defaultstate="collapsed" desc=" Section 6.3.3: MCMC Simulation ">
-                //TODO
-                write("updateLambdaInitScale", "");
-                //TODO
-                write("updateLambdaShiftScale", "");
-                //TODO
-                write("updateMuInitScale", "");
+                //TODO This should be under the Priors tab, not Update rates
+                write("updateLambdaInitScale", t_model_update_rates.getValueAt(0, 1)+"");
+                write("updateLambdaShiftScale", t_model_update_rates.getValueAt(1, 1)+"");
+                write("updateMuInitScale", t_model_update_rates.getValueAt(2, 1)+"");
                 //TODO
                 write("minCladeSizeForShift", "");
                 // </editor-fold>
                 // <editor-fold defaultstate="collapsed" desc=" Section 6.3.4: Starting Parameters ">
-                //TODO
-                write("lambdaInit0", "");
-                //TODO
-                write("lambdaShift0", "");
-                //TODO
-                write("muInit0", "");
+                write("lambdaInit0", t_starting_values.getValueAt(0, 1)+"");
+                write("lambdaShift0", t_starting_values.getValueAt(1, 1)+"");
+                write("muInit0", t_starting_values.getValueAt(2, 1)+"");
+                //TODO CWC What about muShift0?
+                write("muShift0", t_starting_values.getValueAt(3, 1)+"");
                 // </editor-fold>
                 // <editor-fold defaultstate="collapsed" desc=" Section 6.3.5: Parameter Update Rates ">
-                //TODO
-                write("updateRateLambda0", "");
-                //TODO
-                write("updateRateLambdaShift", "");
-                //TODO
-                write("updateRateMu0", "");
+                //Model-Specific Update Rates
+                write("updateRateLambda0", t_model_update_rates.getValueAt(0, 1)+"");
+                write("updateRateLambdaShift", t_model_update_rates.getValueAt(1, 1)+"");
+                write("updateRateMu0", t_model_update_rates.getValueAt(2, 1)+"");
+                //TODO CWC about updateRateMuShift
+                write("updateRateMuShift", t_model_update_rates.getValueAt(3, 1)+"");
                 // </editor-fold>
             }
             // </editor-fold>
             // <editor-fold defaultstate="collapsed" desc=" Section 6.4: Phenotypic Evolution Model ">
             if(model.getModelType() == ModelType.Phenotypic) {
                 // <editor-fold defaultstate="collapsed" desc=" Section 6.4.1: General ">
-                //TODO
-                write("traitfile = ", "");
+                //TODO CWC that this is correct                
+                write("traitfile = ", tf_filename.getText().toString());
                 
                 // </editor-fold>
                 // <editor-fold defaultstate="collapsed" desc=" Section 6.4.2: MCMC Tuning ">
@@ -1027,34 +1160,26 @@ public class BAMM_GUI extends javax.swing.JFrame {
                 write("updateBetaShiftScale = ", "");
                 // </editor-fold>
                 // <editor-fold defaultstate="collapsed" desc=" Section 6.4.3: Starting Parameters ">
-                //TODO
-                write("betaInit = ", "");
-                //TODO
-                write("betaShiftInit = ", "");
+                write("betaInit = ", t_starting_values.getValueAt(0, 1)+"");
+                write("betaShiftInit = ", t_starting_values.getValueAt(1, 1)+"");
                 // </editor-fold>
                 // <editor-fold defaultstate="collapsed" desc=" Section 6.4.4: Priors ">
-                //TODO
-                write("betaInitPrior = ", "");
-                //TODO
-               write("betaInitRootPrior = ", "");
-                //TODO
-                write("betaShiftPrior = ", "");
-                //TODO
-                write("betaShiftRootPrior = ", "");
-                //TODO
-                write("useObservedMinMaxAsTraitPriors = ", "");
-                //TODO
-                write("traitPriorMin = ", "");
-                //TODO
-                write("traitPriorMax = ", "");
+                write("betaInitPrior = ", t_priors.getValueAt(0, 1)+"");
+                write("betaInitRootPrior = ", t_priors.getValueAt(1, 1)+"");
+                write("betaShiftPrior = ", t_priors.getValueAt(2, 1)+"");
+                write("betaShiftRootPrior = ", t_priors.getValueAt(3, 1)+"");
+                //CWC Can these just be input as cb and 2 text fields?
+                write("useObservedMinMaxAsTraitPriors = ", (cb_observed_min_max.isSelected() ? "1" : "0"));
+                if(cb_observed_min_max.isSelected()) {
+                    write("traitPriorMin = ", tf_observed_min.getText().toString());
+                    write("traitPriorMax = ", tf_observed_max.getText().toString());
+                }
                 // </editor-fold>
                 // <editor-fold defaultstate="collapsed" desc=" Section 6.4.5: Parameter Update Rates ">
-                //TODO
-                write("updateRateBeta0 = ", "");
-                //TODO
-                write("updateRateBetaShift = ", "");
-                //TODO
-                write("updateRateNodeState = ", "");
+                //Model-Specific Update Rates
+                write("updateRateBeta0 = ", t_model_update_rates.getValueAt(0, 1)+"");
+                write("updateRateBetaShift = ", t_model_update_rates.getValueAt(1,1)+"");
+                write("updateRateNodeState = ", t_model_update_rates.getValueAt(2, 1)+"");
                 // </editor-fold>
             }
             // </editor-fold>
@@ -1109,6 +1234,7 @@ public class BAMM_GUI extends javax.swing.JFrame {
     private javax.swing.JCheckBox cb_global_prob;
     private javax.swing.JCheckBox cb_init_model;
     private javax.swing.JCheckBox cb_mcmc;
+    private javax.swing.JCheckBox cb_observed_min_max;
     private javax.swing.JCheckBox cb_overwrite;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
@@ -1146,15 +1272,17 @@ public class BAMM_GUI extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTable jTable2;
-    private javax.swing.JTable jTable4;
     private javax.swing.JPanel jp_general;
     private javax.swing.JLabel l_iter;
+    private javax.swing.JLabel l_max;
+    private javax.swing.JLabel l_min;
     private javax.swing.JLabel l_seed;
     private javax.swing.JComboBox s_model;
+    private javax.swing.JTable t_model_tuning;
     private javax.swing.JTable t_model_update_rates;
     private javax.swing.JTable t_priors;
     private javax.swing.JTable t_starting_values;
+    private javax.swing.JTable t_tuning;
     private javax.swing.JTable t_update_rates;
     private javax.swing.JTextField tf_event_data;
     private javax.swing.JTextField tf_event_data_freq;
@@ -1163,6 +1291,8 @@ public class BAMM_GUI extends javax.swing.JFrame {
     private javax.swing.JTextField tf_iterations;
     private javax.swing.JTextField tf_mcmc;
     private javax.swing.JTextField tf_mcmc_freq;
+    private javax.swing.JTextField tf_observed_max;
+    private javax.swing.JTextField tf_observed_min;
     private javax.swing.JTextField tf_output;
     private javax.swing.JTextField tf_runInfo;
     private javax.swing.JTextField tf_sample_prob_file;
