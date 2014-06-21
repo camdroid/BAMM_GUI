@@ -63,6 +63,10 @@ public class BAMM_GUI extends javax.swing.JFrame {
         s_model = new javax.swing.JComboBox();
         cb_init_model = new javax.swing.JCheckBox();
         jSeparator3 = new javax.swing.JSeparator();
+        cb_priorOnly = new javax.swing.JCheckBox();
+        cb_simulatePriors = new javax.swing.JCheckBox();
+        jLabel3 = new javax.swing.JLabel();
+        tf_initNumEvents = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
         cb_global_prob = new javax.swing.JCheckBox();
         jLabel2 = new javax.swing.JLabel();
@@ -74,6 +78,10 @@ public class BAMM_GUI extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         t_starting_values = new javax.swing.JTable();
+        jLabel18 = new javax.swing.JLabel();
+        tf_segLength = new javax.swing.JTextField();
+        jLabel19 = new javax.swing.JLabel();
+        tf_minCladeSize = new javax.swing.JTextField();
         jPanel3 = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
@@ -102,15 +110,12 @@ public class BAMM_GUI extends javax.swing.JFrame {
         jPanel5 = new javax.swing.JPanel();
         jLabel12 = new javax.swing.JLabel();
         tf_runInfo = new javax.swing.JTextField();
-        jButton2 = new javax.swing.JButton();
         jLabel13 = new javax.swing.JLabel();
         tf_mcmc = new javax.swing.JTextField();
-        jButton3 = new javax.swing.JButton();
         jLabel14 = new javax.swing.JLabel();
         tf_mcmc_freq = new javax.swing.JTextField();
         tf_event_data_freq = new javax.swing.JTextField();
         jLabel15 = new javax.swing.JLabel();
-        jButton4 = new javax.swing.JButton();
         tf_event_data = new javax.swing.JTextField();
         jLabel16 = new javax.swing.JLabel();
         cb_overwrite = new javax.swing.JCheckBox();
@@ -121,6 +126,7 @@ public class BAMM_GUI extends javax.swing.JFrame {
         b_loadConfig = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
 
         jLabel1.setText("Tree: ");
 
@@ -160,12 +166,14 @@ public class BAMM_GUI extends javax.swing.JFrame {
         });
 
         l_iter.setText("Number of iterations: ");
+        l_iter.setEnabled(false);
 
         tf_iterations.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tf_iterationsActionPerformed(evt);
             }
         });
+        tf_iterations.setEnabled(false);
 
         jLabel4.setText("Model: ");
 
@@ -178,6 +186,28 @@ public class BAMM_GUI extends javax.swing.JFrame {
 
         cb_init_model.setText("Initialize Model");
 
+        cb_priorOnly.setText("Sample From Prior Only");
+        cb_priorOnly.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cb_priorOnlyActionPerformed(evt);
+            }
+        });
+
+        cb_simulatePriors.setText("Simulate Prior Shifts");
+        cb_simulatePriors.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cb_simulatePriorsActionPerformed(evt);
+            }
+        });
+
+        jLabel3.setText("Initial Number of Events:");
+
+        tf_initNumEvents.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tf_initNumEventsActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jp_generalLayout = new javax.swing.GroupLayout(jp_general);
         jp_general.setLayout(jp_generalLayout);
         jp_generalLayout.setHorizontalGroup(
@@ -187,6 +217,7 @@ public class BAMM_GUI extends javax.swing.JFrame {
                 .addGroup(jp_generalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jSeparator1)
                     .addComponent(jSeparator2)
+                    .addComponent(jSeparator3)
                     .addGroup(jp_generalLayout.createSequentialGroup()
                         .addGroup(jp_generalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jp_generalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -202,18 +233,29 @@ public class BAMM_GUI extends javax.swing.JFrame {
                                     .addComponent(l_seed)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                     .addComponent(tf_seed)))
-                            .addComponent(cb_mcmc)
+                            .addComponent(cb_init_model)
                             .addGroup(jp_generalLayout.createSequentialGroup()
-                                .addComponent(l_iter)
-                                .addGap(18, 18, 18)
-                                .addComponent(tf_iterations, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(jp_generalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(cb_mcmc)
+                                    .addGroup(jp_generalLayout.createSequentialGroup()
+                                        .addGap(12, 12, 12)
+                                        .addComponent(l_iter)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(tf_iterations, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(89, 89, 89)
+                                .addGroup(jp_generalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(cb_simulatePriors)
+                                    .addComponent(cb_priorOnly)))
                             .addGroup(jp_generalLayout.createSequentialGroup()
+                                .addGap(12, 12, 12)
                                 .addComponent(jLabel4)
                                 .addGap(18, 18, 18)
-                                .addComponent(s_model, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(cb_init_model))
-                        .addGap(0, 176, Short.MAX_VALUE))
-                    .addComponent(jSeparator3))
+                                .addComponent(s_model, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(71, 71, 71)
+                                .addComponent(jLabel3)
+                                .addGap(18, 18, 18)
+                                .addComponent(tf_initNumEvents, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 103, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jp_generalLayout.setVerticalGroup(
@@ -232,22 +274,27 @@ public class BAMM_GUI extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(cb_mcmc)
+                .addGroup(jp_generalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cb_mcmc)
+                    .addComponent(cb_priorOnly))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jp_generalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(l_iter)
-                    .addComponent(tf_iterations, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(tf_iterations, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cb_simulatePriors))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(jp_generalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(s_model, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(s_model, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3)
+                    .addComponent(tf_initNumEvents, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(cb_init_model)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(100, Short.MAX_VALUE))
+                .addContainerGap(50, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("General", jp_general);
@@ -293,6 +340,10 @@ public class BAMM_GUI extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(t_starting_values);
 
+        jLabel18.setText("Segment Length:");
+
+        jLabel19.setText("Minimum Clade Size for Shift:");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -323,8 +374,21 @@ public class BAMM_GUI extends javax.swing.JFrame {
                         .addComponent(jLabel6)
                         .addGap(0, 0, Short.MAX_VALUE))))
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(82, 82, 82)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(82, 82, 82)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(20, 20, 20)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(jLabel19)
+                                .addGap(41, 41, 41)
+                                .addComponent(tf_minCladeSize, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(jLabel18)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(tf_segLength, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -346,7 +410,15 @@ public class BAMM_GUI extends javax.swing.JFrame {
                 .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(123, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel18)
+                    .addComponent(tf_segLength, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel19)
+                    .addComponent(tf_minCladeSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(11, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Model", jPanel2);
@@ -395,16 +467,19 @@ public class BAMM_GUI extends javax.swing.JFrame {
         });
 
         l_min.setText("Observed Min");
-        l_min.setVisible(false);
+        l_min.setEnabled(false);
 
-        tf_observed_min.setVisible(false);
+        tf_observed_min.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tf_observed_minActionPerformed(evt);
+            }
+        });
+        tf_observed_min.setEnabled(false);
 
         l_max.setText("Observed Max");
-        l_max.setVisible(false);
+        l_max.setEnabled(false);
 
-        tf_observed_max.setVisible(false);
-
-        cb_observed_min_max.setVisible(false);
+        tf_observed_max.setEnabled(false);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -455,7 +530,7 @@ public class BAMM_GUI extends javax.swing.JFrame {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(l_max)
                     .addComponent(tf_observed_max, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(44, Short.MAX_VALUE))
+                .addContainerGap(51, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Priors", jPanel3);
@@ -523,7 +598,7 @@ public class BAMM_GUI extends javax.swing.JFrame {
                 .addComponent(jLabel8)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
                 .addComponent(jLabel9)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -586,7 +661,7 @@ public class BAMM_GUI extends javax.swing.JFrame {
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel10)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 164, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 165, Short.MAX_VALUE)
                 .addComponent(jLabel11)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -629,16 +704,7 @@ public class BAMM_GUI extends javax.swing.JFrame {
             }
         });
 
-        jButton2.setText("Browse...");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
-
         jLabel13.setText("MCMC: ");
-
-        jButton3.setText("Browse...");
 
         jLabel14.setText("Frequency: ");
 
@@ -655,8 +721,6 @@ public class BAMM_GUI extends javax.swing.JFrame {
         });
 
         jLabel15.setText("Frequency: ");
-
-        jButton4.setText("Browse...");
 
         tf_event_data.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -688,34 +752,26 @@ public class BAMM_GUI extends javax.swing.JFrame {
                             .addComponent(jLabel13)
                             .addComponent(jLabel16))
                         .addGap(10, 10, 10)
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addGroup(jPanel5Layout.createSequentialGroup()
-                                .addComponent(tf_runInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 406, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(tf_event_data, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(124, 124, 124)
+                                .addComponent(jLabel15)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton2))
-                            .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addGroup(jPanel5Layout.createSequentialGroup()
-                                    .addComponent(tf_event_data, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jButton4)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(jLabel15)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(tf_event_data_freq, javax.swing.GroupLayout.DEFAULT_SIZE, 86, Short.MAX_VALUE))
-                                .addGroup(jPanel5Layout.createSequentialGroup()
-                                    .addComponent(tf_mcmc, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jButton3)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(jLabel14)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(tf_mcmc_freq)))))
+                                .addComponent(tf_event_data_freq, javax.swing.GroupLayout.DEFAULT_SIZE, 86, Short.MAX_VALUE))
+                            .addGroup(jPanel5Layout.createSequentialGroup()
+                                .addComponent(tf_mcmc, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(124, 124, 124)
+                                .addComponent(jLabel14)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tf_mcmc_freq))
+                            .addComponent(tf_runInfo, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(cb_overwrite)
                     .addGroup(jPanel5Layout.createSequentialGroup()
                         .addComponent(jLabel17)
                         .addGap(18, 18, 18)
                         .addComponent(tf_output, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(102, Short.MAX_VALUE))
+                .addContainerGap(139, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -723,29 +779,26 @@ public class BAMM_GUI extends javax.swing.JFrame {
                 .addGap(23, 23, 23)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel12)
-                    .addComponent(tf_runInfo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2))
+                    .addComponent(tf_runInfo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel13)
                     .addComponent(tf_mcmc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton3)
                     .addComponent(jLabel14)
                     .addComponent(tf_mcmc_freq, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel16)
                     .addComponent(tf_event_data, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton4)
                     .addComponent(jLabel15)
                     .addComponent(tf_event_data_freq, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(32, 32, 32)
+                .addGap(34, 34, 34)
                 .addComponent(cb_overwrite)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel17)
                     .addComponent(tf_output, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(171, Short.MAX_VALUE))
+                .addContainerGap(140, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Output", jPanel5);
@@ -788,8 +841,8 @@ public class BAMM_GUI extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 420, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 432, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(b_write)
                     .addComponent(b_exit)
@@ -855,12 +908,16 @@ public class BAMM_GUI extends javax.swing.JFrame {
     private void cb_clock_seedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cb_clock_seedActionPerformed
         // TODO add your handling code here:
         if(cb_clock_seed.isSelected()) {
-            l_seed.setVisible(false);
-            tf_seed.setVisible(false);
+//            l_seed.setVisible(false);
+//            tf_seed.setVisible(false);
+            l_seed.setEnabled(false);
+            tf_seed.setEnabled(false);
 //            model.setSeed(Calendar.getInstance().getTimeInMillis());
         } else {
-            l_seed.setVisible(true);
-            tf_seed.setVisible(true);
+//            l_seed.setVisible(true);
+//            tf_seed.setVisible(true);
+            l_seed.setEnabled(true);
+            tf_seed.setEnabled(true);
         }
     }//GEN-LAST:event_cb_clock_seedActionPerformed
 
@@ -871,10 +928,6 @@ public class BAMM_GUI extends javax.swing.JFrame {
     private void cb_global_probActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cb_global_probActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_cb_global_probActionPerformed
-
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
 
     private void cb_overwriteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cb_overwriteActionPerformed
         // TODO add your handling code here:
@@ -909,11 +962,16 @@ public class BAMM_GUI extends javax.swing.JFrame {
             ((DefaultTableModel)t_priors.getModel()).addRow(new Object[]{"Root Mu Shift","0"});
             
             //Extra Prior Settings
-            cb_observed_min_max.setVisible(false);
-            l_min.setVisible(false);
-            l_max.setVisible(false);
-            tf_observed_min.setVisible(false);
-            tf_observed_min.setVisible(false);
+//            cb_observed_min_max.setVisible(false);
+//            l_min.setVisible(false);
+//            l_max.setVisible(false);
+//            tf_observed_min.setVisible(false);
+//            tf_observed_min.setVisible(false);
+            cb_observed_min_max.setEnabled(false);
+            l_min.setEnabled(false);
+            l_max.setEnabled(false);
+            tf_observed_min.setEnabled(false);
+            tf_observed_min.setEnabled(false);
             
             //Model-Specific Tuning
             t_model_tuning.setValueAt("Lambda Init Scale", 0, 0);
@@ -945,11 +1003,16 @@ public class BAMM_GUI extends javax.swing.JFrame {
             ((DefaultTableModel)t_priors.getModel()).removeRow(4);
             
             //Extra Prior Settings
-            cb_observed_min_max.setVisible(true);
-            l_min.setVisible(true);
-            l_max.setVisible(true);
-            tf_observed_min.setVisible(true);
-            tf_observed_max.setVisible(true);
+//            cb_observed_min_max.setVisible(true);
+//            l_min.setVisible(true);
+//            l_max.setVisible(true);
+//            tf_observed_min.setVisible(true);
+//            tf_observed_max.setVisible(true);
+            cb_observed_min_max.setEnabled(true);
+            l_min.setEnabled(true);
+            l_max.setEnabled(true);
+            tf_observed_min.setEnabled(true);
+            tf_observed_max.setEnabled(true);
             
             //Model-Specific Tuning
             t_model_tuning.setValueAt("Node State", 0, 0);
@@ -983,8 +1046,10 @@ public class BAMM_GUI extends javax.swing.JFrame {
 
     private void cb_mcmcActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cb_mcmcActionPerformed
         model.setRunMCMC(cb_mcmc.isSelected());
-        l_iter.setVisible(!cb_mcmc.isSelected());
-        tf_iterations.setVisible(!cb_mcmc.isSelected());
+//        l_iter.setVisible(!cb_mcmc.isSelected());
+//        tf_iterations.setVisible(!cb_mcmc.isSelected());
+        l_iter.setEnabled(cb_mcmc.isSelected());
+        tf_iterations.setEnabled(cb_mcmc.isSelected());
     }//GEN-LAST:event_cb_mcmcActionPerformed
 
     private void tf_seedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tf_seedActionPerformed
@@ -1022,10 +1087,32 @@ public class BAMM_GUI extends javax.swing.JFrame {
     }//GEN-LAST:event_tf_event_data_freqActionPerformed
 
     private void cb_observed_min_maxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cb_observed_min_maxActionPerformed
-        // TODO add your handling code here:
+        boolean set = cb_observed_min_max.isSelected();
+        
+        l_min.setEnabled(set);
+        l_max.setEnabled(set);
+        tf_observed_min.setEnabled(set);
+        tf_observed_max.setEnabled(set);
+        
     }//GEN-LAST:event_cb_observed_min_maxActionPerformed
+
+    private void tf_observed_minActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tf_observed_minActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tf_observed_minActionPerformed
+
+    private void cb_priorOnlyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cb_priorOnlyActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cb_priorOnlyActionPerformed
+
+    private void cb_simulatePriorsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cb_simulatePriorsActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cb_simulatePriorsActionPerformed
+
+    private void tf_initNumEventsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tf_initNumEventsActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tf_initNumEventsActionPerformed
     private void write(String parameter, String value) {
-        if(value != "null" && value != "") {
+        if(value != "null" && !value.isEmpty()) {
             try{
                 writer.write(parameter + " = " + value);
                 writer.newLine();
@@ -1041,7 +1128,8 @@ public class BAMM_GUI extends javax.swing.JFrame {
         
         try {
             //Open the file
-            writer = new BufferedWriter(new FileWriter(new File(FILENAME)));
+            File outputFile = new File(FILENAME);
+            writer = new BufferedWriter(new FileWriter(outputFile));
             
             //Start writing all the options
             // <editor-fold defaultstate="collapsed" desc=" Section 6.2: General Options and Parameters ">
@@ -1052,21 +1140,17 @@ public class BAMM_GUI extends javax.swing.JFrame {
             write("modeltype", ((model.getModelType() == ModelType.Phenotypic) ? "trait" : "extinctionspeciation"));
             write("treefile", model.getTreeFilename());
             write("runInfoFilename", tf_runInfo.getText().toString());
-            
-            //TODO: What does this depend on?
-            write("sampleFromPriorOnly", "");
-            //TODO: Again, what does this depend on?
-            write("autotune", "");
+            write("sampleFromPriorOnly", (cb_priorOnly.isSelected() ? "1" : "0"));
+            write("autotune", "");  //No value for this yet
             
             write("runMCMC", ((model.getRunMCMC() ? "1" : "0")));
-            //TODO
-            write("simulatePriorShifts", "");     
+            write("simulatePriorShifts", (cb_simulatePriors.isSelected()) ? "1" : "0");     
             write("loadEventData", model.getLoadEventData()+"");
             if(model.getLoadEventData()) {
                 write("eventDataInFile", "");
             }
             write("initializeModel", (cb_init_model.isSelected()) ? "1" : "0");
-            write("seed", (cb_clock_seed.isSelected() ? tf_seed.getText().toString() : "-1"));
+            write("seed", (cb_clock_seed.isSelected() ? "-1" : tf_seed.getText().toString()));
             write("overwrite", (cb_overwrite.isSelected() ? "1" : "0"));
 
 // </editor-fold>
@@ -1094,8 +1178,13 @@ public class BAMM_GUI extends javax.swing.JFrame {
             write("updateRateEventNumber", t_update_rates.getValueAt(0, 1)+"");
             write("updateRateEventPosition", t_update_rates.getValueAt(1,1)+"");
             write("updateRateEventRate", t_update_rates.getValueAt(2, 1)+"");
-            //TODO
-            write("initialNumberEvents", "");
+            try{
+                int num0 = Integer.parseInt(tf_initNumEvents.getText());
+                write("initialNumberEvents", num0+"");
+            } catch(Exception e) {
+                //TODO Add some alert here
+            }
+            
             // </editor-fold>
 
             // </editor-fold> 
@@ -1117,15 +1206,25 @@ public class BAMM_GUI extends javax.swing.JFrame {
                 write("muShiftPrior", t_priors.getValueAt(3, 1)+"");
                 write("muShiftRootPrior", t_priors.getValueAt(7, 1)+"");
                 //TODO
-                write("segLength", "");
+                try{
+                    double segLength = Double.parseDouble(tf_segLength.getText());
+                    write("initialNumberEvents", segLength+"");
+                } catch(Exception e) {
+                    //TODO Add alert here
+                }
                 // </editor-fold>
                 // <editor-fold defaultstate="collapsed" desc=" Section 6.3.3: MCMC Simulation ">
                 //TODO This should be under the Priors tab, not Update rates
                 write("updateLambdaInitScale", t_model_update_rates.getValueAt(0, 1)+"");
                 write("updateLambdaShiftScale", t_model_update_rates.getValueAt(1, 1)+"");
                 write("updateMuInitScale", t_model_update_rates.getValueAt(2, 1)+"");
-                //TODO
-                write("minCladeSizeForShift", "");
+                try {
+                    int minCladeSize = Integer.parseInt(tf_minCladeSize.getText());
+                    write("minCladeSizeForShift", minCladeSize+"");
+                } catch(Exception e) {
+                    //TODO Add alert here
+                }
+                
                 // </editor-fold>
                 // <editor-fold defaultstate="collapsed" desc=" Section 6.3.4: Starting Parameters ">
                 write("lambdaInit0", t_starting_values.getValueAt(0, 1)+"");
@@ -1184,6 +1283,10 @@ public class BAMM_GUI extends javax.swing.JFrame {
             }
             // </editor-fold>
             writer.close();
+            if(outputFile.isFile()) {
+                JOptionPane.showMessageDialog(null, "Output file created successfully.", 
+                        "Successful Write", JOptionPane.PLAIN_MESSAGE);
+            }
         } catch(IOException ioe) {
             ioe.printStackTrace();
         }
@@ -1236,9 +1339,8 @@ public class BAMM_GUI extends javax.swing.JFrame {
     private javax.swing.JCheckBox cb_mcmc;
     private javax.swing.JCheckBox cb_observed_min_max;
     private javax.swing.JCheckBox cb_overwrite;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
+    private javax.swing.JCheckBox cb_priorOnly;
+    private javax.swing.JCheckBox cb_simulatePriors;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -1248,7 +1350,10 @@ public class BAMM_GUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
@@ -1288,9 +1393,11 @@ public class BAMM_GUI extends javax.swing.JFrame {
     private javax.swing.JTextField tf_event_data_freq;
     private javax.swing.JTextField tf_evp;
     private javax.swing.JTextField tf_filename;
+    private javax.swing.JTextField tf_initNumEvents;
     private javax.swing.JTextField tf_iterations;
     private javax.swing.JTextField tf_mcmc;
     private javax.swing.JTextField tf_mcmc_freq;
+    private javax.swing.JTextField tf_minCladeSize;
     private javax.swing.JTextField tf_observed_max;
     private javax.swing.JTextField tf_observed_min;
     private javax.swing.JTextField tf_output;
@@ -1298,5 +1405,6 @@ public class BAMM_GUI extends javax.swing.JFrame {
     private javax.swing.JTextField tf_sample_prob_file;
     private javax.swing.JTextField tf_sampling_fraction;
     private javax.swing.JTextField tf_seed;
+    private javax.swing.JTextField tf_segLength;
     // End of variables declaration//GEN-END:variables
 }
