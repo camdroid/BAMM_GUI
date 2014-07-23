@@ -1203,7 +1203,7 @@ public class BAMM_GUI extends javax.swing.JFrame {
                     case "muShiftRootPrior":
                         t_starting_values.setValueAt(results[1], 7, 1);
                         break;
-                    case ""
+//                    case ""
                 }
             }
         } catch(FileNotFoundException e) {
@@ -1392,38 +1392,38 @@ public class BAMM_GUI extends javax.swing.JFrame {
             if(model.getModelType() == ModelType.Phenotypic) {
                 // <editor-fold defaultstate="collapsed" desc=" Section 6.4.1: General ">
                 //TODO CWC that this is correct                
-                write("traitfile = ", tf_filename.getText().toString());
+                write("traitfile ", tf_filename.getText().toString());
                 
                 // </editor-fold>
                 // <editor-fold defaultstate="collapsed" desc=" Section 6.4.2: MCMC Tuning ">
                 //TODO
-                write("updateBetaScale = ", "");
+                write("updateBetaScale ", "");
                 //TODO
-                write("updateNodeStateScale = ", "");
+                write("updateNodeStateScale ", "");
                 //TODO
-                write("updateBetaShiftScale = ", "");
+                write("updateBetaShiftScale ", "");
                 // </editor-fold>
                 // <editor-fold defaultstate="collapsed" desc=" Section 6.4.3: Starting Parameters ">
-                write("betaInit = ", t_starting_values.getValueAt(0, 1)+"");
-                write("betaShiftInit = ", t_starting_values.getValueAt(1, 1)+"");
+                write("betaInit ", t_starting_values.getValueAt(0, 1)+"");
+                write("betaShiftInit ", t_starting_values.getValueAt(1, 1)+"");
                 // </editor-fold>
                 // <editor-fold defaultstate="collapsed" desc=" Section 6.4.4: Priors ">
-                write("betaInitPrior = ", t_priors.getValueAt(0, 1)+"");
-                write("betaInitRootPrior = ", t_priors.getValueAt(1, 1)+"");
-                write("betaShiftPrior = ", t_priors.getValueAt(2, 1)+"");
-                write("betaShiftRootPrior = ", t_priors.getValueAt(3, 1)+"");
+                write("betaInitPrior ", t_priors.getValueAt(0, 1)+"");
+                write("betaInitRootPrior ", t_priors.getValueAt(1, 1)+"");
+                write("betaShiftPrior ", t_priors.getValueAt(2, 1)+"");
+                write("betaShiftRootPrior ", t_priors.getValueAt(3, 1)+"");
                 //CWC Can these just be input as cb and 2 text fields?
-                write("useObservedMinMaxAsTraitPriors = ", (cb_observed_min_max.isSelected() ? "1" : "0"));
+                write("useObservedMinMaxAsTraitPriors ", (cb_observed_min_max.isSelected() ? "1" : "0"));
                 if(cb_observed_min_max.isSelected()) {
-                    write("traitPriorMin = ", tf_observed_min.getText().toString());
-                    write("traitPriorMax = ", tf_observed_max.getText().toString());
+                    write("traitPriorMin ", tf_observed_min.getText().toString());
+                    write("traitPriorMax ", tf_observed_max.getText().toString());
                 }
                 // </editor-fold>
                 // <editor-fold defaultstate="collapsed" desc=" Section 6.4.5: Parameter Update Rates ">
                 //Model-Specific Update Rates
-                write("updateRateBeta0 = ", t_model_update_rates.getValueAt(0, 1)+"");
-                write("updateRateBetaShift = ", t_model_update_rates.getValueAt(1,1)+"");
-                write("updateRateNodeState = ", t_model_update_rates.getValueAt(2, 1)+"");
+                write("updateRateBeta0 ", t_model_update_rates.getValueAt(0, 1)+"");
+                write("updateRateBetaShift ", t_model_update_rates.getValueAt(1,1)+"");
+                write("updateRateNodeState ", t_model_update_rates.getValueAt(2, 1)+"");
                 // </editor-fold>
             }
             // </editor-fold>
