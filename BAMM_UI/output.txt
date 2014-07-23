@@ -1,17 +1,14 @@
 #This is a comment and will not be read by BAMM.
 modeltype = extinctionspeciation
+treefile = trefile.tre
 sampleFromPriorOnly = 0
-runMCMC = 1
+runMCMC = 0
 simulatePriorShifts = 0
 loadEventData = false
 initializeModel = 0
 seed = -1
 overwrite = 0
 poissonRatePrior = 1.0
-numberGenerations = 10
-updateEventLocationScale = 0
-updateEventRateScale = 0
-localGlobalMoveRatio = 0
 updateRateEventNumber = 0
 updateRateEventPosition = 0
 updateRateEventRate = 0

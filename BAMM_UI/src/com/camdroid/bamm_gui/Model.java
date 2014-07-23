@@ -11,7 +11,7 @@ import java.io.IOException;
 
 /**
  *
- * @author camhe_000
+ * @author Cam Herringshaw
  */
 enum ModelType { ESModel, Phenotypic };
 public class Model {

@@ -7,10 +7,15 @@
 package com.camdroid.bamm_gui;
 
 //import com.camdroid.bamm_gui.Model;
+import java.awt.Color;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -25,7 +30,7 @@ public class BAMM_GUI extends javax.swing.JFrame {
     
     
     Model model;
-    final String FILENAME = "output.txt";
+    String FILENAME = "output.txt";
     BufferedWriter writer;
     /**
      * Creates new form BAMM_GUI
@@ -48,7 +53,7 @@ public class BAMM_GUI extends javax.swing.JFrame {
 
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jp_general = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
+        l_tree = new javax.swing.JLabel();
         tf_filename = new javax.swing.JTextField();
         b_browse = new javax.swing.JButton();
         cb_clock_seed = new javax.swing.JCheckBox();
@@ -69,9 +74,9 @@ public class BAMM_GUI extends javax.swing.JFrame {
         tf_initNumEvents = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
         cb_global_prob = new javax.swing.JCheckBox();
-        jLabel2 = new javax.swing.JLabel();
+        l_sampling_fraction = new javax.swing.JLabel();
         tf_sampling_fraction = new javax.swing.JTextField();
-        jLabel5 = new javax.swing.JLabel();
+        l_sample_prob_file = new javax.swing.JLabel();
         tf_sample_prob_file = new javax.swing.JTextField();
         b_sample_file = new javax.swing.JButton();
         jSeparator4 = new javax.swing.JSeparator();
@@ -128,7 +133,7 @@ public class BAMM_GUI extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
 
-        jLabel1.setText("Tree: ");
+        l_tree.setText("Tree: ");
 
         tf_filename.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -222,7 +227,7 @@ public class BAMM_GUI extends javax.swing.JFrame {
                         .addGroup(jp_generalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jp_generalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addGroup(jp_generalLayout.createSequentialGroup()
-                                    .addComponent(jLabel1)
+                                    .addComponent(l_tree)
                                     .addGap(18, 18, 18)
                                     .addComponent(tf_filename, javax.swing.GroupLayout.PREFERRED_SIZE, 324, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGap(28, 28, 28)
@@ -263,7 +268,7 @@ public class BAMM_GUI extends javax.swing.JFrame {
             .addGroup(jp_generalLayout.createSequentialGroup()
                 .addGap(37, 37, 37)
                 .addGroup(jp_generalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
+                    .addComponent(l_tree)
                     .addComponent(tf_filename, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(b_browse))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -306,9 +311,9 @@ public class BAMM_GUI extends javax.swing.JFrame {
             }
         });
 
-        jLabel2.setText("Sampling Fraction");
+        l_sampling_fraction.setText("Sampling Fraction");
 
-        jLabel5.setText("Sample Probability File: ");
+        l_sample_prob_file.setText("Sample Probability File: ");
 
         b_sample_file.setText("Browse...");
         b_sample_file.addActionListener(new java.awt.event.ActionListener() {
@@ -359,9 +364,9 @@ public class BAMM_GUI extends javax.swing.JFrame {
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(cb_global_prob)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel2))
+                                .addComponent(l_sampling_fraction))
                             .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(jLabel5)
+                                .addComponent(l_sample_prob_file)
                                 .addGap(18, 18, 18)
                                 .addComponent(tf_sample_prob_file, javax.swing.GroupLayout.PREFERRED_SIZE, 264, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(0, 102, Short.MAX_VALUE)))
@@ -397,11 +402,11 @@ public class BAMM_GUI extends javax.swing.JFrame {
                 .addGap(35, 35, 35)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cb_global_prob)
-                    .addComponent(jLabel2)
+                    .addComponent(l_sampling_fraction)
                     .addComponent(tf_sampling_fraction, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
+                    .addComponent(l_sample_prob_file)
                     .addComponent(tf_sample_prob_file, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(b_sample_file))
                 .addGap(18, 18, 18)
@@ -883,7 +888,12 @@ public class BAMM_GUI extends javax.swing.JFrame {
             // here.  For now, this line should never be reached.
             JOptionPane.showMessageDialog(this, "Wait, how did you do that?");
         }
-        
+        if(tf_filename.getText().toString().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "There must be a value for the tree name!");
+            jTabbedPane1.setSelectedIndex(0);
+            l_tree.setForeground(Color.RED);
+            return;
+        }
         model.setTreeFile(tf_filename.getText().toString());
         if(!cb_clock_seed.isSelected()) {
             try{
@@ -926,7 +936,11 @@ public class BAMM_GUI extends javax.swing.JFrame {
     }//GEN-LAST:event_b_sample_fileActionPerformed
 
     private void cb_global_probActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cb_global_probActionPerformed
-        // TODO add your handling code here:
+        boolean b = cb_global_prob.isSelected();
+        l_sampling_fraction.setEnabled(b);
+        tf_sampling_fraction.setEnabled(b);
+        l_sample_prob_file.setEnabled(b);
+        tf_sample_prob_file.setEnabled(b);
     }//GEN-LAST:event_cb_global_probActionPerformed
 
     private void cb_overwriteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cb_overwriteActionPerformed
@@ -938,8 +952,6 @@ public class BAMM_GUI extends javax.swing.JFrame {
         if(reply == JOptionPane.YES_OPTION) {
             System.exit(0);
         }
-        
-        
     }//GEN-LAST:event_b_exitActionPerformed
 
     private void s_modelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_s_modelActionPerformed
@@ -962,11 +974,6 @@ public class BAMM_GUI extends javax.swing.JFrame {
             ((DefaultTableModel)t_priors.getModel()).addRow(new Object[]{"Root Mu Shift","0"});
             
             //Extra Prior Settings
-//            cb_observed_min_max.setVisible(false);
-//            l_min.setVisible(false);
-//            l_max.setVisible(false);
-//            tf_observed_min.setVisible(false);
-//            tf_observed_min.setVisible(false);
             cb_observed_min_max.setEnabled(false);
             l_min.setEnabled(false);
             l_max.setEnabled(false);
@@ -1003,11 +1010,6 @@ public class BAMM_GUI extends javax.swing.JFrame {
             ((DefaultTableModel)t_priors.getModel()).removeRow(4);
             
             //Extra Prior Settings
-//            cb_observed_min_max.setVisible(true);
-//            l_min.setVisible(true);
-//            l_max.setVisible(true);
-//            tf_observed_min.setVisible(true);
-//            tf_observed_max.setVisible(true);
             cb_observed_min_max.setEnabled(true);
             l_min.setEnabled(true);
             l_max.setEnabled(true);
@@ -1064,13 +1066,150 @@ public class BAMM_GUI extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_tf_iterationsActionPerformed
 
+    private String[] parseLine(String line) {
+//        ArrayList<String> results = new ArrayList<String>();
+        String[] results = line.split(" = ");
+        
+        return results;
+    }
     private void b_loadConfigActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b_loadConfigActionPerformed
         JFileChooser fc = new JFileChooser();
         int returnVal = fc.showOpenDialog(this);
+        String filename = "";
         if(returnVal == JFileChooser.APPROVE_OPTION) {
-            String filename = fc.getSelectedFile().getPath();
-            model.setLoadEventData(true);
-            model.setEventDataInfile(filename);
+            filename = fc.getSelectedFile().getPath();
+//            model.setLoadEventData(true);
+//            model.setEventDataInfile(filename);
+        }
+        if(filename.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Please pick a real file", "File Error", JOptionPane.PLAIN_MESSAGE);
+            return;
+        }
+        try {
+            BufferedReader in = new BufferedReader(new FileReader(filename));
+            String currentLine = "";
+            while((currentLine = in.readLine()) != null) {
+                if(currentLine.charAt(0) == '#') {
+                    System.out.println("Comment - skipping line");
+                    continue;
+                }
+                System.out.println(currentLine);
+                String[] results = parseLine(currentLine);
+                //Idea - right now, I'll just use a giant switch statement, but I'm guessing that will eventually be too large
+                // (or at least, very hard to maintain).  Ideally, I'll create a map from the text result to the corresponding
+                // Java UI element, and will then be able to go back and forth between the two.
+                //But it's hard to say how (or even if) that will work, considering there are multiple types of UI elements...hmm
+                switch(results[0]) {
+                    case "modeltype":
+                        System.out.println("Reading modeltype...");
+                        if(results[1].equals("extinctionspeciation")) {
+                            System.out.println("Setting modeltype to E/S");
+                            s_model.setSelectedItem("Extinction/Speciation");
+                        } else {
+                            System.out.println("Setting modeltype to Phenotypic");
+                            s_model.setSelectedItem("Phenotypic");
+                        }
+                        break;
+                    case "treefile":
+                        System.out.println("Hey, treefile: "+results[1]);
+                        tf_filename.setText(results[1]);
+                        break;
+                    case "seed":
+                        System.out.println("Seed is "+results[1]);
+                        long seed = Long.parseLong(results[1], 10);
+                        if(seed == -1) {
+                            cb_clock_seed.setSelected(true);
+                            tf_seed.setEnabled(false);
+                            l_seed.setEnabled(false);
+                        } else {
+                            l_seed.setEnabled(true);
+                            tf_seed.setEnabled(true);
+                            tf_seed.setText(seed+"");
+                        }
+                        break;
+                    case "runMCMC":
+                        System.out.println("runMCMC is "+results[1]);
+//                        if(results[1].equals("1")) {
+//                            cb_mcmc.setSelected(true);
+//                        } else {
+//                            cb_mcmc.setSelected(false);
+//                        }
+                        cb_mcmc.setSelected(results[1].equals("1"));
+                        break;
+                    case "sampleFromPriorOnly":
+                        System.out.println("sampleFromPriorOnly is "+results[1]);
+//                        if(results[1].equals("1")) {
+//                            cb_priorOnly.setSelected(true);
+//                        } else {
+//                            cb_priorOnly.setSelected(false);
+//                        }
+                        cb_priorOnly.setSelected(results[1].equals("1"));
+                        break;
+                    case "simulatePriorShifts":
+                        System.out.println("simulatePriorShifts is "+results[1]);
+                        cb_simulatePriors.setSelected(results[1].equals("1"));
+                        break;
+                    case "numberGenerations":
+                        tf_iterations.setText(results[1]);
+                        break;
+                    case "initializeModel":
+                        cb_init_model.setSelected(results[1].equals("1"));
+                        break;
+                    case "useGlobalSamplingProbability":
+                        cb_global_prob.setSelected(results[1].equals("1"));
+                        break;
+                    case "globalSamplingProbability":
+                        tf_sampling_fraction.setText(results[1]);
+                        break;
+                    case "sampleProbsFilename":
+                        tf_sample_prob_file.setText(results[1]);
+                        break;
+                    case "lambdaInit0":
+                        t_starting_values.setValueAt(results[1], 0, 1);
+                        break;
+                    case "lambdaShift0":
+                        t_starting_values.setValueAt(results[1], 1, 1);
+                        break;
+                    case "muInit0":
+                        t_starting_values.setValueAt(results[1], 2, 1);
+                        break;
+                    case "muShift0":
+                        t_starting_values.setValueAt(results[1], 3, 1);
+                        break;
+                    case "poissonRatePrior":
+                        tf_evp.setText(results[1]);
+                        break;
+                    case "lambdaInitPrior":
+                        t_starting_values.setValueAt(results[1], 0, 1);
+                        break;
+                    case "lambdaInitRootPrior":
+                        t_starting_values.setValueAt(results[1], 4, 1);
+                        break;
+                    case "lambdaShiftPrior":
+                        t_starting_values.setValueAt(results[1], 1, 1);
+                        break;
+                    case "lambdaShiftRootPrior":
+                        t_starting_values.setValueAt(results[1], 5, 1);
+                        break;
+                    case "muInitPrior":
+                        t_starting_values.setValueAt(results[1], 2, 1);
+                        break;
+                    case "muInitRootPrior":
+                        t_starting_values.setValueAt(results[1], 6, 1);
+                        break;
+                    case "muShiftPrior":
+                        t_starting_values.setValueAt(results[1], 3, 1);
+                        break;
+                    case "muShiftRootPrior":
+                        t_starting_values.setValueAt(results[1], 7, 1);
+                        break;
+                    case ""
+                }
+            }
+        } catch(FileNotFoundException e) {
+            e.printStackTrace();
+        } catch(IOException e) {
+            e.printStackTrace();
         }
     }//GEN-LAST:event_b_loadConfigActionPerformed
 
@@ -1128,7 +1267,13 @@ public class BAMM_GUI extends javax.swing.JFrame {
         
         try {
             //Open the file
-            File outputFile = new File(FILENAME);
+            JFileChooser fc = new JFileChooser();
+            int returnVal = fc.showOpenDialog(this);
+            String filename="";
+            if(returnVal == JFileChooser.APPROVE_OPTION) {
+                 filename = fc.getSelectedFile().getPath();
+            }
+            File outputFile = new File(filename);
             writer = new BufferedWriter(new FileWriter(outputFile));
             
             //Start writing all the options
@@ -1284,7 +1429,7 @@ public class BAMM_GUI extends javax.swing.JFrame {
             // </editor-fold>
             writer.close();
             if(outputFile.isFile()) {
-                JOptionPane.showMessageDialog(null, "Output file created successfully.", 
+                JOptionPane.showMessageDialog(null, "Output file created successfully at "+outputFile.getAbsolutePath(), 
                         "Successful Write", JOptionPane.PLAIN_MESSAGE);
             }
         } catch(IOException ioe) {
@@ -1341,7 +1486,6 @@ public class BAMM_GUI extends javax.swing.JFrame {
     private javax.swing.JCheckBox cb_overwrite;
     private javax.swing.JCheckBox cb_priorOnly;
     private javax.swing.JCheckBox cb_simulatePriors;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
@@ -1352,10 +1496,8 @@ public class BAMM_GUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
@@ -1381,7 +1523,10 @@ public class BAMM_GUI extends javax.swing.JFrame {
     private javax.swing.JLabel l_iter;
     private javax.swing.JLabel l_max;
     private javax.swing.JLabel l_min;
+    private javax.swing.JLabel l_sample_prob_file;
+    private javax.swing.JLabel l_sampling_fraction;
     private javax.swing.JLabel l_seed;
+    private javax.swing.JLabel l_tree;
     private javax.swing.JComboBox s_model;
     private javax.swing.JTable t_model_tuning;
     private javax.swing.JTable t_model_update_rates;
