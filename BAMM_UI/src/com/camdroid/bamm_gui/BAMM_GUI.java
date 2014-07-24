@@ -1203,7 +1203,31 @@ public class BAMM_GUI extends javax.swing.JFrame {
                     case "muShiftRootPrior":
                         t_starting_values.setValueAt(results[1], 7, 1);
                         break;
-//                    case ""
+                    case "useObservedMinMaxAsPriors":
+                        cb_observed_min_max.setSelected(results[1].equals("1"));
+                        break;
+                    case "traitPriorMin":
+                        tf_observed_min.setText(results[1]);
+                        break;
+                    case "traitPriorMax":
+                        tf_observed_max.setText(results[1]);
+                        break;
+                    case "updateRateEventNumber":
+                        t_update_rates.setValueAt(results[1], 0, 1);
+                        break;
+                    case "updateRateEventRate":
+                        t_update_rates.setValueAt(results[1], 2, 1);
+                        break;
+                    case "updateRateBeta0":
+                        //TODO Might want to throw an "if" in here for error checking
+                        t_model_update_rates.setValueAt(results[1], 0, 1);
+                        break;
+                    case "updateRateBetaShift":
+                        t_model_update_rates.setValueAt(results[1], 1, 1);
+                        break;
+                    case "updateRateNodeState":
+                        t_model_update_rates.setValueAt(results[1], 2, 1);
+                        break;
                 }
             }
         } catch(FileNotFoundException e) {
