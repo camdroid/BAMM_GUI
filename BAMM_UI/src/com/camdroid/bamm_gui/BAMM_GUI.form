@@ -26,6 +26,8 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Component id="jTabbedPane1" alignment="0" max="32767" attributes="0"/>
           <Group type="102" alignment="1" attributes="0">
+              <EmptySpace min="-2" pref="67" max="-2" attributes="0"/>
+              <Component id="b_reset_all" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="32767" attributes="0"/>
               <Component id="b_loadConfig" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
@@ -45,6 +47,7 @@
                   <Component id="b_write" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="b_exit" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="b_loadConfig" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="b_reset_all" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="0" pref="56" max="32767" attributes="0"/>
           </Group>
@@ -1197,6 +1200,14 @@
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="b_loadConfigActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="b_reset_all">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Reset All Fields"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="b_reset_allActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>

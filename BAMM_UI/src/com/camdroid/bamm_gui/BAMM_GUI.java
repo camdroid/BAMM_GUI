@@ -8,6 +8,7 @@ package com.camdroid.bamm_gui;
 
 //import com.camdroid.bamm_gui.Model;
 import java.awt.Color;
+import java.awt.Component;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -17,6 +18,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
@@ -129,6 +131,7 @@ public class BAMM_GUI extends javax.swing.JFrame {
         b_write = new javax.swing.JButton();
         b_exit = new javax.swing.JButton();
         b_loadConfig = new javax.swing.JButton();
+        b_reset_all = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -829,13 +832,22 @@ public class BAMM_GUI extends javax.swing.JFrame {
             }
         });
 
+        b_reset_all.setText("Reset All Fields");
+        b_reset_all.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                b_reset_allActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jTabbedPane1)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(67, 67, 67)
+                .addComponent(b_reset_all)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(b_loadConfig)
                 .addGap(36, 36, 36)
                 .addComponent(b_write)
@@ -851,7 +863,8 @@ public class BAMM_GUI extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(b_write)
                     .addComponent(b_exit)
-                    .addComponent(b_loadConfig))
+                    .addComponent(b_loadConfig)
+                    .addComponent(b_reset_all))
                 .addGap(0, 56, Short.MAX_VALUE))
         );
 
@@ -1072,6 +1085,20 @@ public class BAMM_GUI extends javax.swing.JFrame {
         
         return results;
     }
+    
+    //TODO Make this work
+    // Right now, components end up all null
+    private void resetAllFields() {
+        Component[] components = getContentPane().getComponents();
+        for(Component c: components) {
+            System.out.println("Resetting "+c.getName());
+            if(c instanceof JCheckBox) {
+                ((JCheckBox)c).setSelected(false);
+            } else if(c instanceof JTextField) {
+                ((JTextField)c).setText("");
+            }
+        }
+    }
     private void b_loadConfigActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b_loadConfigActionPerformed
         JFileChooser fc = new JFileChooser();
         int returnVal = fc.showOpenDialog(this);
@@ -1086,6 +1113,7 @@ public class BAMM_GUI extends javax.swing.JFrame {
             return;
         }
         try {
+            resetAllFields();
             BufferedReader in = new BufferedReader(new FileReader(filename));
             String currentLine = "";
             while((currentLine = in.readLine()) != null) {
@@ -1128,25 +1156,15 @@ public class BAMM_GUI extends javax.swing.JFrame {
                         }
                         break;
                     case "runMCMC":
-                        System.out.println("runMCMC is "+results[1]);
-//                        if(results[1].equals("1")) {
-//                            cb_mcmc.setSelected(true);
-//                        } else {
-//                            cb_mcmc.setSelected(false);
-//                        }
+//                        System.out.println("runMCMC is "+results[1]);
                         cb_mcmc.setSelected(results[1].equals("1"));
                         break;
                     case "sampleFromPriorOnly":
-                        System.out.println("sampleFromPriorOnly is "+results[1]);
-//                        if(results[1].equals("1")) {
-//                            cb_priorOnly.setSelected(true);
-//                        } else {
-//                            cb_priorOnly.setSelected(false);
-//                        }
+//                        System.out.println("sampleFromPriorOnly is "+results[1]);
                         cb_priorOnly.setSelected(results[1].equals("1"));
                         break;
                     case "simulatePriorShifts":
-                        System.out.println("simulatePriorShifts is "+results[1]);
+//                        System.out.println("simulatePriorShifts is "+results[1]);
                         cb_simulatePriors.setSelected(results[1].equals("1"));
                         break;
                     case "numberGenerations":
@@ -1228,6 +1246,36 @@ public class BAMM_GUI extends javax.swing.JFrame {
                     case "updateRateNodeState":
                         t_model_update_rates.setValueAt(results[1], 2, 1);
                         break;
+                    case "runInfoFilename":
+                        tf_runInfo.setText(results[1]);
+                        break;
+                    case "mcmcOutfile":
+                        tf_mcmc.setText(results[1]);
+                        break;
+                    case "mcmcWriteFreq":
+                        tf_mcmc_freq.setText(results[1]);
+                        break;
+                    case "eventDataOUtfile":
+                        tf_event_data.setText(results[1]);
+                        break;
+                    case "eventDataWriteFreq":
+                        tf_event_data_freq.setText(results[1]);
+                        break;
+                    case "overwrite":
+                        cb_overwrite.setSelected(results[1].equals("1"));
+                        break;
+                    case "printFreq":
+                        tf_output.setText(results[1]);
+                        break;
+                    case "updateEventLocationScale":
+                        t_tuning.setValueAt(results[1], 0, 1);
+                        break;
+                    case "updateEventRateScale":
+                        t_tuning.setValueAt(results[1], 1, 1);
+                        break;
+                    case "localGlobalMoveRatio":
+                        t_tuning.setValueAt(results[1], 2, 1);
+                        break;
                 }
             }
         } catch(FileNotFoundException e) {
@@ -1274,6 +1322,10 @@ public class BAMM_GUI extends javax.swing.JFrame {
     private void tf_initNumEventsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tf_initNumEventsActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_tf_initNumEventsActionPerformed
+
+    private void b_reset_allActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b_reset_allActionPerformed
+        resetAllFields();
+    }//GEN-LAST:event_b_reset_allActionPerformed
     private void write(String parameter, String value) {
         if(value != "null" && !value.isEmpty()) {
             try{
@@ -1331,7 +1383,7 @@ public class BAMM_GUI extends javax.swing.JFrame {
                 // <editor-fold defaultstate="collapsed" desc=" Section 6.2.3: MCMC Simulation ">
             if (model.getRunMCMC()) {
                 write("numberGenerations", tf_iterations.getText().toString());
-                write("mcmcWriterFreq", tf_mcmc_freq.getText().toString());
+                write("mcmcWriteFreq", tf_mcmc_freq.getText().toString());
                 write("eventDataWriteFreq", tf_event_data_freq.getText().toString());
                 write("printFreq", tf_output.getText().toString());
                 write("outName", tf_mcmc.getText().toString());
@@ -1371,7 +1423,6 @@ public class BAMM_GUI extends javax.swing.JFrame {
                 write("lambdaShiftRootPrior", t_priors.getValueAt(5, 1) + "");
                 write("muInitPrior", t_priors.getValueAt(2, 1) + "");
                 write("muInitRootPrior", t_priors.getValueAt(6, 1) + "");
-                //TODO CWC Should these next two be included?  (Weren't specified)
                 write("muShiftPrior", t_priors.getValueAt(3, 1)+"");
                 write("muShiftRootPrior", t_priors.getValueAt(7, 1)+"");
                 //TODO
@@ -1383,10 +1434,10 @@ public class BAMM_GUI extends javax.swing.JFrame {
                 }
                 // </editor-fold>
                 // <editor-fold defaultstate="collapsed" desc=" Section 6.3.3: MCMC Simulation ">
-                //TODO This should be under the Priors tab, not Update rates
-                write("updateLambdaInitScale", t_model_update_rates.getValueAt(0, 1)+"");
-                write("updateLambdaShiftScale", t_model_update_rates.getValueAt(1, 1)+"");
-                write("updateMuInitScale", t_model_update_rates.getValueAt(2, 1)+"");
+                write("updateLambdaInitScale", t_tuning.getValueAt(0, 1)+"");
+                write("updateLambdaShiftScale", t_tuning.getValueAt(1, 1)+"");
+                write("updateMuInitScale", t_tuning.getValueAt(2, 1)+"");
+                write("updateMuShiftScale", t_tuning.getValueAt(3, 1)+"");
                 try {
                     int minCladeSize = Integer.parseInt(tf_minCladeSize.getText());
                     write("minCladeSizeForShift", minCladeSize+"");
@@ -1500,6 +1551,7 @@ public class BAMM_GUI extends javax.swing.JFrame {
     private javax.swing.JButton b_browse;
     private javax.swing.JButton b_exit;
     private javax.swing.JButton b_loadConfig;
+    private javax.swing.JButton b_reset_all;
     private javax.swing.JButton b_sample_file;
     private javax.swing.JButton b_write;
     private javax.swing.JCheckBox cb_clock_seed;
