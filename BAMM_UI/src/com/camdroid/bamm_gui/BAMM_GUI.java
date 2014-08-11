@@ -1434,10 +1434,10 @@ public class BAMM_GUI extends javax.swing.JFrame {
                 }
                 // </editor-fold>
                 // <editor-fold defaultstate="collapsed" desc=" Section 6.3.3: MCMC Simulation ">
-                write("updateLambdaInitScale", t_tuning.getValueAt(0, 1)+"");
-                write("updateLambdaShiftScale", t_tuning.getValueAt(1, 1)+"");
-                write("updateMuInitScale", t_tuning.getValueAt(2, 1)+"");
-                write("updateMuShiftScale", t_tuning.getValueAt(3, 1)+"");
+                write("updateLambdaInitScale", t_model_update_rates.getValueAt(0, 1)+"");
+                write("updateLambdaShiftScale", t_model_update_rates.getValueAt(1, 1)+"");
+                write("updateMuInitScale", t_model_update_rates.getValueAt(2, 1)+"");
+                write("updateMuShiftScale", t_model_update_rates.getValueAt(3, 1)+"");
                 try {
                     int minCladeSize = Integer.parseInt(tf_minCladeSize.getText());
                     write("minCladeSizeForShift", minCladeSize+"");
