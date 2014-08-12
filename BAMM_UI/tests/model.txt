@@ -1,0 +1,23 @@
+#This is a comment and will not be read by BAMM.
+modeltype = trait
+treefile = tre.tre
+sampleFromPriorOnly = 1
+runMCMC = 0
+simulatePriorShifts = 1
+loadEventData = false
+initializeModel = 1
+seed = -1
+overwrite = 0
+poissonRatePrior = 1.0
+updateRateEventNumber = 0
+updateRateEventPosition = 0
+updateRateEventRate = 0
+initialNumberEvents = 50
+traitfile  = tre.tre
+betaInit  = 0
+betaShiftInit  = 0
+betaInitPrior  = 0.0
+betaInitRootPrior  = 0.0
+betaShiftPrior  = 0.0
+betaShiftRootPrior  = 0.0
+useObservedMinMaxAsTraitPriors  = 0
