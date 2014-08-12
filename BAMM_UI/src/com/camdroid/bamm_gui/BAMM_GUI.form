@@ -605,13 +605,13 @@
                           <Data value="root mu shift"/>
                         </Column>
                         <Column editable="true" title="Value" type="java.lang.String">
-                          <Data value="1.0"/>
-                          <Data value=".05"/>
-                          <Data value="1.0"/>
-                          <Data value=".05"/>
+                          <Data value="0.0"/>
+                          <Data value="0.0"/>
+                          <Data value="0.0"/>
+                          <Data value="0.0"/>
                           <Data value="0"/>
                           <Data value="0"/>
-                          <Data value="5.0"/>
+                          <Data value="0.0"/>
                           <Data value="0"/>
                         </Column>
                       </Table>

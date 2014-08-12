@@ -435,13 +435,13 @@ public class BAMM_GUI extends javax.swing.JFrame {
 
         t_priors.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {"lambda init", "1.0"},
-                {"lambda shift", ".05"},
-                {"mu init", "1.0"},
-                {"mu shift", ".05"},
+                {"lambda init", "0.0"},
+                {"lambda shift", "0.0"},
+                {"mu init", "0.0"},
+                {"mu shift", "0.0"},
                 {"root lambda init", "0"},
                 {"root lambda shift", "0"},
-                {"root mu init", "5.0"},
+                {"root mu init", "0.0"},
                 {"root mu shift", "0"}
             },
             new String [] {
@@ -929,16 +929,11 @@ public class BAMM_GUI extends javax.swing.JFrame {
     }//GEN-LAST:event_b_writeActionPerformed
 
     private void cb_clock_seedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cb_clock_seedActionPerformed
-        // TODO add your handling code here:
+
         if(cb_clock_seed.isSelected()) {
-//            l_seed.setVisible(false);
-//            tf_seed.setVisible(false);
             l_seed.setEnabled(false);
             tf_seed.setEnabled(false);
-//            model.setSeed(Calendar.getInstance().getTimeInMillis());
         } else {
-//            l_seed.setVisible(true);
-//            tf_seed.setVisible(true);
             l_seed.setEnabled(true);
             tf_seed.setEnabled(true);
         }
@@ -1105,8 +1100,6 @@ public class BAMM_GUI extends javax.swing.JFrame {
         String filename = "";
         if(returnVal == JFileChooser.APPROVE_OPTION) {
             filename = fc.getSelectedFile().getPath();
-//            model.setLoadEventData(true);
-//            model.setEventDataInfile(filename);
         }
         if(filename.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Please pick a real file", "File Error", JOptionPane.PLAIN_MESSAGE);
@@ -1133,9 +1126,11 @@ public class BAMM_GUI extends javax.swing.JFrame {
                         if(results[1].equals("extinctionspeciation")) {
                             System.out.println("Setting modeltype to E/S");
                             s_model.setSelectedItem("Extinction/Speciation");
+                            model.setModelType(ModelType.ESModel);
                         } else {
                             System.out.println("Setting modeltype to Phenotypic");
                             s_model.setSelectedItem("Phenotypic");
+                            model.setModelType(ModelType.Phenotypic);
                         }
                         break;
                     case "treefile":
@@ -1173,6 +1168,9 @@ public class BAMM_GUI extends javax.swing.JFrame {
                     case "initializeModel":
                         cb_init_model.setSelected(results[1].equals("1"));
                         break;
+                    case "initialNumberEvents":
+                        tf_initNumEvents.setText(results[1]);
+                        break;
                     case "useGlobalSamplingProbability":
                         cb_global_prob.setSelected(results[1].equals("1"));
                         break;
@@ -1198,28 +1196,28 @@ public class BAMM_GUI extends javax.swing.JFrame {
                         tf_evp.setText(results[1]);
                         break;
                     case "lambdaInitPrior":
-                        t_starting_values.setValueAt(results[1], 0, 1);
+                        t_priors.setValueAt(results[1], 0, 1);
                         break;
                     case "lambdaInitRootPrior":
-                        t_starting_values.setValueAt(results[1], 4, 1);
+                        t_priors.setValueAt(results[1], 4, 1);
                         break;
                     case "lambdaShiftPrior":
-                        t_starting_values.setValueAt(results[1], 1, 1);
+                        t_priors.setValueAt(results[1], 1, 1);
                         break;
                     case "lambdaShiftRootPrior":
-                        t_starting_values.setValueAt(results[1], 5, 1);
+                        t_priors.setValueAt(results[1], 5, 1);
                         break;
                     case "muInitPrior":
-                        t_starting_values.setValueAt(results[1], 2, 1);
+                        t_priors.setValueAt(results[1], 2, 1);
                         break;
                     case "muInitRootPrior":
-                        t_starting_values.setValueAt(results[1], 6, 1);
+                        t_priors.setValueAt(results[1], 6, 1);
                         break;
                     case "muShiftPrior":
-                        t_starting_values.setValueAt(results[1], 3, 1);
+                        t_priors.setValueAt(results[1], 3, 1);
                         break;
                     case "muShiftRootPrior":
-                        t_starting_values.setValueAt(results[1], 7, 1);
+                        t_priors.setValueAt(results[1], 7, 1);
                         break;
                     case "useObservedMinMaxAsPriors":
                         cb_observed_min_max.setSelected(results[1].equals("1"));
@@ -1237,7 +1235,6 @@ public class BAMM_GUI extends javax.swing.JFrame {
                         t_update_rates.setValueAt(results[1], 2, 1);
                         break;
                     case "updateRateBeta0":
-                        //TODO Might want to throw an "if" in here for error checking
                         t_model_update_rates.setValueAt(results[1], 0, 1);
                         break;
                     case "updateRateBetaShift":
@@ -1248,6 +1245,9 @@ public class BAMM_GUI extends javax.swing.JFrame {
                         break;
                     case "runInfoFilename":
                         tf_runInfo.setText(results[1]);
+                        break;
+                    case "minCladeSizeForShift":
+                        tf_minCladeSize.setText(results[1]);
                         break;
                     case "mcmcOutfile":
                         tf_mcmc.setText(results[1]);
@@ -1327,6 +1327,7 @@ public class BAMM_GUI extends javax.swing.JFrame {
         resetAllFields();
     }//GEN-LAST:event_b_reset_allActionPerformed
     private void write(String parameter, String value) {
+        //TODO If the string has a numerical value of 0, should it still write?
         if(value != "null" && !value.isEmpty()) {
             try{
                 writer.write(parameter + " = " + value);
@@ -1400,10 +1401,11 @@ public class BAMM_GUI extends javax.swing.JFrame {
             write("updateRateEventPosition", t_update_rates.getValueAt(1,1)+"");
             write("updateRateEventRate", t_update_rates.getValueAt(2, 1)+"");
             try{
-                int num0 = Integer.parseInt(tf_initNumEvents.getText());
+                //Using double rather than int to avoid parsing issues with "##.0"
+                double num0 = Double.parseDouble(tf_initNumEvents.getText());
                 write("initialNumberEvents", num0+"");
             } catch(Exception e) {
-                //TODO Add some alert here
+                System.out.println("\n\nCould not write number of events");
             }
             
             // </editor-fold>
@@ -1425,12 +1427,11 @@ public class BAMM_GUI extends javax.swing.JFrame {
                 write("muInitRootPrior", t_priors.getValueAt(6, 1) + "");
                 write("muShiftPrior", t_priors.getValueAt(3, 1)+"");
                 write("muShiftRootPrior", t_priors.getValueAt(7, 1)+"");
-                //TODO
                 try{
                     double segLength = Double.parseDouble(tf_segLength.getText());
                     write("initialNumberEvents", segLength+"");
                 } catch(Exception e) {
-                    //TODO Add alert here
+                    System.out.println("Could not write the initial number of events");
                 }
                 // </editor-fold>
                 // <editor-fold defaultstate="collapsed" desc=" Section 6.3.3: MCMC Simulation ">
@@ -1439,10 +1440,10 @@ public class BAMM_GUI extends javax.swing.JFrame {
                 write("updateMuInitScale", t_model_update_rates.getValueAt(2, 1)+"");
                 write("updateMuShiftScale", t_model_update_rates.getValueAt(3, 1)+"");
                 try {
-                    int minCladeSize = Integer.parseInt(tf_minCladeSize.getText());
+                    double minCladeSize = Double.parseDouble(tf_minCladeSize.getText());
                     write("minCladeSizeForShift", minCladeSize+"");
                 } catch(Exception e) {
-                    //TODO Add alert here
+                    System.out.println("Could not write the minimum Clade size for shift");
                 }
                 
                 // </editor-fold>
@@ -1450,7 +1451,6 @@ public class BAMM_GUI extends javax.swing.JFrame {
                 write("lambdaInit0", t_starting_values.getValueAt(0, 1)+"");
                 write("lambdaShift0", t_starting_values.getValueAt(1, 1)+"");
                 write("muInit0", t_starting_values.getValueAt(2, 1)+"");
-                //TODO CWC What about muShift0?
                 write("muShift0", t_starting_values.getValueAt(3, 1)+"");
                 // </editor-fold>
                 // <editor-fold defaultstate="collapsed" desc=" Section 6.3.5: Parameter Update Rates ">
@@ -1458,7 +1458,6 @@ public class BAMM_GUI extends javax.swing.JFrame {
                 write("updateRateLambda0", t_model_update_rates.getValueAt(0, 1)+"");
                 write("updateRateLambdaShift", t_model_update_rates.getValueAt(1, 1)+"");
                 write("updateRateMu0", t_model_update_rates.getValueAt(2, 1)+"");
-                //TODO CWC about updateRateMuShift
                 write("updateRateMuShift", t_model_update_rates.getValueAt(3, 1)+"");
                 // </editor-fold>
             }
@@ -1466,7 +1465,6 @@ public class BAMM_GUI extends javax.swing.JFrame {
             // <editor-fold defaultstate="collapsed" desc=" Section 6.4: Phenotypic Evolution Model ">
             if(model.getModelType() == ModelType.Phenotypic) {
                 // <editor-fold defaultstate="collapsed" desc=" Section 6.4.1: General ">
-                //TODO CWC that this is correct                
                 write("traitfile ", tf_filename.getText().toString());
                 
                 // </editor-fold>
@@ -1487,7 +1485,6 @@ public class BAMM_GUI extends javax.swing.JFrame {
                 write("betaInitRootPrior ", t_priors.getValueAt(1, 1)+"");
                 write("betaShiftPrior ", t_priors.getValueAt(2, 1)+"");
                 write("betaShiftRootPrior ", t_priors.getValueAt(3, 1)+"");
-                //CWC Can these just be input as cb and 2 text fields?
                 write("useObservedMinMaxAsTraitPriors ", (cb_observed_min_max.isSelected() ? "1" : "0"));
                 if(cb_observed_min_max.isSelected()) {
                     write("traitPriorMin ", tf_observed_min.getText().toString());
