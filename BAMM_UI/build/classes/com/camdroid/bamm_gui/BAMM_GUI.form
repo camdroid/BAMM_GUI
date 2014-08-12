@@ -1209,6 +1209,9 @@
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="b_reset_allActionPerformed"/>
       </Events>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="b_reset_all.setEnabled(false);&#xa;b_reset_all.setVisible(false);"/>
+      </AuxValues>
     </Component>
   </SubComponents>
 </Form>

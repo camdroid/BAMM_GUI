@@ -9,6 +9,7 @@ package com.camdroid.bamm_gui;
 //import com.camdroid.bamm_gui.Model;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Container;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -18,6 +19,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -868,6 +870,9 @@ public class BAMM_GUI extends javax.swing.JFrame {
                 .addGap(0, 56, Short.MAX_VALUE))
         );
 
+        b_reset_all.setEnabled(false);
+        b_reset_all.setVisible(false);
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -1081,11 +1086,20 @@ public class BAMM_GUI extends javax.swing.JFrame {
         return results;
     }
     
-    //TODO Make this work
-    // Right now, components end up all null
+    
+    public static List<Component> getAllComponents(final Container c) {
+        Component[] comps = c.getComponents();
+        List<Component> compList = new ArrayList<Component>();
+        for (Component comp : comps) {
+            compList.add(comp);
+            if (comp instanceof Container)
+                compList.addAll(getAllComponents((Container) comp));
+        }
+        return compList;
+    }
+    
     private void resetAllFields() {
-        Component[] components = getContentPane().getComponents();
-        for(Component c: components) {
+        for(Component c: getAllComponents(this)) {
             System.out.println("Resetting "+c.getName());
             if(c instanceof JCheckBox) {
                 ((JCheckBox)c).setSelected(false);
@@ -1095,6 +1109,7 @@ public class BAMM_GUI extends javax.swing.JFrame {
         }
     }
     private void b_loadConfigActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b_loadConfigActionPerformed
+        resetAllFields();
         JFileChooser fc = new JFileChooser();
         int returnVal = fc.showOpenDialog(this);
         String filename = "";
