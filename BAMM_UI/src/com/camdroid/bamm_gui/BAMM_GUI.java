@@ -1099,14 +1099,16 @@ public class BAMM_GUI extends javax.swing.JFrame {
     }
     
     private void resetAllFields() {
+        System.out.println("Resetting all fields");
         for(Component c: getAllComponents(this)) {
-            System.out.println("Resetting "+c.getName());
+//            System.out.println("Resetting "+c.getName());
             if(c instanceof JCheckBox) {
                 ((JCheckBox)c).setSelected(false);
             } else if(c instanceof JTextField) {
                 ((JTextField)c).setText("");
             }
         }
+        System.out.println("All fields reset");
     }
     private void b_loadConfigActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b_loadConfigActionPerformed
         resetAllFields();
@@ -1121,15 +1123,26 @@ public class BAMM_GUI extends javax.swing.JFrame {
             return;
         }
         try {
-            resetAllFields();
+//            resetAllFields();
+            System.out.println("Loading configuration file: "+filename);
             BufferedReader in = new BufferedReader(new FileReader(filename));
             String currentLine = "";
+            int commentCount = 0;
             while((currentLine = in.readLine()) != null) {
-                if(currentLine.charAt(0) == '#') {
-                    System.out.println("Comment - skipping line");
+                //Account for blank lines
+                if(currentLine.length() == 0) {
                     continue;
                 }
-                System.out.println(currentLine);
+                //Skip comments
+                if(currentLine.charAt(0) == '#') {
+//                    System.out.println("Comment - skipping line");
+                    commentCount++;
+                    continue;
+                }
+                
+                System.out.println("Skipped "+commentCount+" lines of comments");
+                commentCount = 0;
+                System.out.println("Reading line: "+currentLine);
                 String[] results = parseLine(currentLine);
                 //Idea - right now, I'll just use a giant switch statement, but I'm guessing that will eventually be too large
                 // (or at least, very hard to maintain).  Ideally, I'll create a map from the text result to the corresponding
@@ -1382,7 +1395,7 @@ public class BAMM_GUI extends javax.swing.JFrame {
             
             write("runMCMC", ((model.getRunMCMC() ? "1" : "0")));
             write("simulatePriorShifts", (cb_simulatePriors.isSelected()) ? "1" : "0");     
-            write("loadEventData", model.getLoadEventData()+"");
+            write("loadEventData", (model.getLoadEventData() ? "1":"0"));
             if(model.getLoadEventData()) {
                 write("eventDataInFile", "");
             }
