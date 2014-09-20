@@ -67,6 +67,9 @@ public class Model {
     ModelType getModelType() {
         return modelType;
     }
+    String getModelTypeString() {
+        return ((getModelType() == ModelType.Phenotypic) ? "trait" : "extinctionspeciation");
+    }
     String getTreeFilename() {
         return treeFilename;
     }

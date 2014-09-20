@@ -18,7 +18,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
@@ -877,12 +876,6 @@ public class BAMM_GUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void b_browseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b_browseActionPerformed
-//        JFileChooser fc = new JFileChooser();
-//        int returnVal = fc.showOpenDialog(this);
-//        if(returnVal == JFileChooser.APPROVE_OPTION) {
-//            String filename = fc.getSelectedFile().getPath();
-//            tf_filename.setText(filename);
-//        }
         browse(tf_filename);
     }//GEN-LAST:event_b_browseActionPerformed
 
@@ -906,16 +899,16 @@ public class BAMM_GUI extends javax.swing.JFrame {
             // here.  For now, this line should never be reached.
             JOptionPane.showMessageDialog(this, "Wait, how did you do that?");
         }
-        if(tf_filename.getText().toString().isEmpty()) {
+        if(tf_filename.getText().isEmpty()) {
             JOptionPane.showMessageDialog(this, "There must be a value for the tree name!");
             jTabbedPane1.setSelectedIndex(0);
             l_tree.setForeground(Color.RED);
             return;
         }
-        model.setTreeFile(tf_filename.getText().toString());
+        model.setTreeFile(tf_filename.getText());
         if(!cb_clock_seed.isSelected()) {
             try{
-                model.setSeed(Long.parseLong(tf_seed.getText().toString()));
+                model.setSeed(Long.parseLong(tf_seed.getText()));
             } catch(NumberFormatException e) {
                 JOptionPane.showMessageDialog(this, "Invalid expression for the clock seed");
                 return;
@@ -923,7 +916,7 @@ public class BAMM_GUI extends javax.swing.JFrame {
         }
         if(cb_mcmc.isSelected()) {
             try{
-                long numIter = Long.parseLong(tf_iterations.getText().toString());
+                long numIter = Long.parseLong(tf_iterations.getText());
             } catch(NumberFormatException e) {
                 JOptionPane.showMessageDialog(this, "Invalid expression for the number of iterations");
                 return;
@@ -1089,7 +1082,7 @@ public class BAMM_GUI extends javax.swing.JFrame {
     
     public static List<Component> getAllComponents(final Container c) {
         Component[] comps = c.getComponents();
-        List<Component> compList = new ArrayList<Component>();
+        List<Component> compList = new ArrayList<>();
         for (Component comp : comps) {
             compList.add(comp);
             if (comp instanceof Container)
@@ -1126,7 +1119,7 @@ public class BAMM_GUI extends javax.swing.JFrame {
 //            resetAllFields();
             System.out.println("Loading configuration file: "+filename);
             BufferedReader in = new BufferedReader(new FileReader(filename));
-            String currentLine = "";
+            String currentLine;
             int commentCount = 0;
             while((currentLine = in.readLine()) != null) {
                 //Account for blank lines
@@ -1354,9 +1347,11 @@ public class BAMM_GUI extends javax.swing.JFrame {
     private void b_reset_allActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b_reset_allActionPerformed
         resetAllFields();
     }//GEN-LAST:event_b_reset_allActionPerformed
+    //Multiple functions so that reading the main part of the printToFile method
+    // is easier.
     private void write(String parameter, String value) {
         //TODO If the string has a numerical value of 0, should it still write?
-        if(value != "null" && !value.isEmpty()) {
+        if(!value.equals("null") && !value.isEmpty()) {
             try{
                 writer.write(parameter + " = " + value);
                 writer.newLine();
@@ -1367,6 +1362,10 @@ public class BAMM_GUI extends javax.swing.JFrame {
     }
     private void write(String parameter, JTextField valueField) {
         //TODO Fill this in for error-checking
+        write(parameter, valueField.getText().toString());
+    }
+    private void write(String parameter, JCheckBox checkBox) {
+        write(parameter, (checkBox.isSelected() ? "1" : "0"));
     }
     private void printToFile(Model model) {
         
@@ -1387,52 +1386,49 @@ public class BAMM_GUI extends javax.swing.JFrame {
             //Section 6.2.1: General
             writer.write("#This is a comment and will not be read by BAMM.");
             writer.newLine();
-            write("modeltype", ((model.getModelType() == ModelType.Phenotypic) ? "trait" : "extinctionspeciation"));
+            write("modeltype", model.getModelTypeString());
             write("treefile", model.getTreeFilename());
-            write("runInfoFilename", tf_runInfo.getText().toString());
-            write("sampleFromPriorOnly", (cb_priorOnly.isSelected() ? "1" : "0"));
+            write("runInfoFilename", tf_runInfo);
+            write("sampleFromPriorOnly", cb_priorOnly);
             write("autotune", "");  //No value for this yet
             
-            write("runMCMC", ((model.getRunMCMC() ? "1" : "0")));
-            write("simulatePriorShifts", (cb_simulatePriors.isSelected()) ? "1" : "0");     
-            write("loadEventData", (model.getLoadEventData() ? "1":"0"));
-            if(model.getLoadEventData()) {
-                write("eventDataInFile", "");
-            }
-            write("initializeModel", (cb_init_model.isSelected()) ? "1" : "0");
-            write("seed", (cb_clock_seed.isSelected() ? "-1" : tf_seed.getText().toString()));
-            write("overwrite", (cb_overwrite.isSelected() ? "1" : "0"));
+            write("runMCMC",                ((model.getRunMCMC() ? "1" : "0")));
+            write("simulatePriorShifts",    cb_simulatePriors);
+            write("initializeModel",        cb_init_model);
+            write("seed",                   (cb_clock_seed.isSelected() ? "-1" : tf_seed.getText()));
+            write("overwrite",              cb_overwrite);
 
 // </editor-fold>
                 // <editor-fold defaultstate="collapsed" desc=" Section 6.2.2: Priors ">
             //Section 6.2.2: Priors
-            write("poissonRatePrior", tf_evp.getText().toString());
+            write("poissonRatePrior", tf_evp);
 
             // </editor-fold>
                 // <editor-fold defaultstate="collapsed" desc=" Section 6.2.3: MCMC Simulation ">
             if (model.getRunMCMC()) {
-                write("numberGenerations", tf_iterations.getText().toString());
-                write("mcmcWriteFreq", tf_mcmc_freq.getText().toString());
-                write("eventDataWriteFreq", tf_event_data_freq.getText().toString());
-                write("printFreq", tf_output.getText().toString());
-                write("outName", tf_mcmc.getText().toString());
-                write("mcmcOutfile", tf_mcmc.getText().toString());
-                write("eventDataOutfile", tf_event_data.getText().toString());
-                write("updateEventLocationScale", t_tuning.getValueAt(0, 1)+"");
-                write("updateEventRateScale", t_tuning.getValueAt(1, 1)+"");
-                write("localGlobalMoveRatio", t_tuning.getValueAt(2, 1)+"");
+                write("numberGenerations",          tf_iterations);
+                write("mcmcWriteFreq",              tf_mcmc_freq);
+                write("eventDataWriteFreq",         tf_event_data_freq);
+                write("printFreq",                  tf_output);
+                //TODO Why are there two output names with the same value?
+                write("outName",                    tf_mcmc);
+                write("mcmcOutfile",                tf_mcmc);
+                write("eventDataOutfile",           tf_event_data);
+                write("updateEventLocationScale",   t_tuning.getValueAt(0, 1) + "");
+                write("updateEventRateScale",       t_tuning.getValueAt(1, 1) + "");
+                write("localGlobalMoveRatio",       t_tuning.getValueAt(2, 1) + "");
             }
             // </editor-fold>
                 // <editor-fold defaultstate="collapsed" desc=" Section 6.2.4: Parameter Update Rates ">
             
-            write("updateRateEventNumber", t_update_rates.getValueAt(0, 1)+"");
-            write("updateRateEventPosition", t_update_rates.getValueAt(1,1)+"");
-            write("updateRateEventRate", t_update_rates.getValueAt(2, 1)+"");
+            write("updateRateEventNumber",      t_update_rates.getValueAt(0, 1) + "");
+            write("updateRateEventPosition",    t_update_rates.getValueAt(1, 1) + "");
+            write("updateRateEventRate",        t_update_rates.getValueAt(2, 1) + "");
             try{
                 //Using double rather than int to avoid parsing issues with "##.0"
                 double num0 = Double.parseDouble(tf_initNumEvents.getText());
                 write("initialNumberEvents", num0+"");
-            } catch(Exception e) {
+            } catch(NumberFormatException e) {
                 System.out.println("\n\nCould not write number of events");
             }
             
@@ -1442,58 +1438,58 @@ public class BAMM_GUI extends javax.swing.JFrame {
             // <editor-fold defaultstate="collapsed" desc=" Section 6.3: Speciation/Extinction Model ">
             if(model.getModelType() == ModelType.ESModel){
                 // <editor-fold defaultstate="collapsed" desc=" Section 6.3.1: General ">
-                write("useGlobalSamplingProbability", (cb_global_prob.isSelected() ? "1" : "0"));
-                write("globalSamplingProbability", tf_sampling_fraction.getText().toString());
-                write("sampleProbsFilename", tf_sample_prob_file.getText().toString());
+                write("useGlobalSamplingProbability",   cb_global_prob);
+                write("globalSamplingProbability",      tf_sampling_fraction);
+                write("sampleProbsFilename",            tf_sample_prob_file);
                 // </editor-fold>
                 // <editor-fold defaultstate="collapsed" desc=" Section 6.3.2: Priors ">
-                write("lambdaInitPrior", t_priors.getValueAt(0, 1) + "");
-                write("lambdaInitRootPrior", t_priors.getValueAt(4, 1) + "");
-                write("lambdaShiftPrior", t_priors.getValueAt(1, 1) + "");
-                write("lambdaShiftRootPrior", t_priors.getValueAt(5, 1) + "");
-                write("muInitPrior", t_priors.getValueAt(2, 1) + "");
-                write("muInitRootPrior", t_priors.getValueAt(6, 1) + "");
-                write("muShiftPrior", t_priors.getValueAt(3, 1)+"");
-                write("muShiftRootPrior", t_priors.getValueAt(7, 1)+"");
+                write("lambdaInitPrior",                t_priors.getValueAt(0, 1) + "");
+                write("lambdaInitRootPrior",            t_priors.getValueAt(4, 1) + "");
+                write("lambdaShiftPrior",               t_priors.getValueAt(1, 1) + "");
+                write("lambdaShiftRootPrior",           t_priors.getValueAt(5, 1) + "");
+                write("muInitPrior",                    t_priors.getValueAt(2, 1) + "");
+                write("muInitRootPrior",                t_priors.getValueAt(6, 1) + "");
+                write("muShiftPrior",                   t_priors.getValueAt(3, 1) + "");
+                write("muShiftRootPrior",               t_priors.getValueAt(7, 1) + "");
                 try{
                     double segLength = Double.parseDouble(tf_segLength.getText());
                     write("initialNumberEvents", segLength+"");
-                } catch(Exception e) {
+                } catch(NumberFormatException e) {
                     System.out.println("Could not write the initial number of events");
                 }
                 // </editor-fold>
                 // <editor-fold defaultstate="collapsed" desc=" Section 6.3.3: MCMC Simulation ">
-                write("updateLambdaInitScale", t_model_update_rates.getValueAt(0, 1)+"");
-                write("updateLambdaShiftScale", t_model_update_rates.getValueAt(1, 1)+"");
-                write("updateMuInitScale", t_model_update_rates.getValueAt(2, 1)+"");
-                write("updateMuShiftScale", t_model_update_rates.getValueAt(3, 1)+"");
+                write("updateLambdaInitScale",      t_model_update_rates.getValueAt(0, 1) + "");
+                write("updateLambdaShiftScale",     t_model_update_rates.getValueAt(1, 1) + "");
+                write("updateMuInitScale",          t_model_update_rates.getValueAt(2, 1) + "");
+                write("updateMuShiftScale",         t_model_update_rates.getValueAt(3, 1) + "");
                 try {
                     double minCladeSize = Double.parseDouble(tf_minCladeSize.getText());
                     write("minCladeSizeForShift", minCladeSize+"");
-                } catch(Exception e) {
+                } catch(NumberFormatException e) {
                     System.out.println("Could not write the minimum Clade size for shift");
                 }
                 
                 // </editor-fold>
                 // <editor-fold defaultstate="collapsed" desc=" Section 6.3.4: Starting Parameters ">
-                write("lambdaInit0", t_starting_values.getValueAt(0, 1)+"");
-                write("lambdaShift0", t_starting_values.getValueAt(1, 1)+"");
-                write("muInit0", t_starting_values.getValueAt(2, 1)+"");
-                write("muShift0", t_starting_values.getValueAt(3, 1)+"");
+                write("lambdaInit0",            t_starting_values.getValueAt(0, 1)+"");
+                write("lambdaShift0",           t_starting_values.getValueAt(1, 1)+"");
+                write("muInit0",                t_starting_values.getValueAt(2, 1)+"");
+                write("muShift0",               t_starting_values.getValueAt(3, 1)+"");
                 // </editor-fold>
                 // <editor-fold defaultstate="collapsed" desc=" Section 6.3.5: Parameter Update Rates ">
                 //Model-Specific Update Rates
-                write("updateRateLambda0", t_model_update_rates.getValueAt(0, 1)+"");
-                write("updateRateLambdaShift", t_model_update_rates.getValueAt(1, 1)+"");
-                write("updateRateMu0", t_model_update_rates.getValueAt(2, 1)+"");
-                write("updateRateMuShift", t_model_update_rates.getValueAt(3, 1)+"");
+                write("updateRateLambda0",      t_model_update_rates.getValueAt(0, 1) + "");
+                write("updateRateLambdaShift",  t_model_update_rates.getValueAt(1, 1) + "");
+                write("updateRateMu0",          t_model_update_rates.getValueAt(2, 1) + "");
+                write("updateRateMuShift",      t_model_update_rates.getValueAt(3, 1) + "");
                 // </editor-fold>
             }
             // </editor-fold>
             // <editor-fold defaultstate="collapsed" desc=" Section 6.4: Phenotypic Evolution Model ">
             if(model.getModelType() == ModelType.Phenotypic) {
                 // <editor-fold defaultstate="collapsed" desc=" Section 6.4.1: General ">
-                write("traitfile ", tf_filename.getText().toString());
+                write("traitfile ", tf_filename);
                 
                 // </editor-fold>
                 // <editor-fold defaultstate="collapsed" desc=" Section 6.4.2: MCMC Tuning ">
@@ -1505,32 +1501,32 @@ public class BAMM_GUI extends javax.swing.JFrame {
                 write("updateBetaShiftScale ", "");
                 // </editor-fold>
                 // <editor-fold defaultstate="collapsed" desc=" Section 6.4.3: Starting Parameters ">
-                write("betaInit ", t_starting_values.getValueAt(0, 1)+"");
-                write("betaShiftInit ", t_starting_values.getValueAt(1, 1)+"");
+                write("betaInit ",                      t_starting_values.getValueAt(0, 1)+"");
+                write("betaShiftInit ",                 t_starting_values.getValueAt(1, 1)+"");
                 // </editor-fold>
                 // <editor-fold defaultstate="collapsed" desc=" Section 6.4.4: Priors ">
-                write("betaInitPrior ", t_priors.getValueAt(0, 1)+"");
-                write("betaInitRootPrior ", t_priors.getValueAt(1, 1)+"");
-                write("betaShiftPrior ", t_priors.getValueAt(2, 1)+"");
-                write("betaShiftRootPrior ", t_priors.getValueAt(3, 1)+"");
-                write("useObservedMinMaxAsTraitPriors ", (cb_observed_min_max.isSelected() ? "1" : "0"));
+                write("betaInitPrior ",                 t_priors.getValueAt(0, 1)+"");
+                write("betaInitRootPrior ",             t_priors.getValueAt(1, 1)+"");
+                write("betaShiftPrior ",                t_priors.getValueAt(2, 1)+"");
+                write("betaShiftRootPrior ",            t_priors.getValueAt(3, 1)+"");
+                write("useObservedMinMaxAsTraitPriors ", cb_observed_min_max);
                 if(cb_observed_min_max.isSelected()) {
-                    write("traitPriorMin ", tf_observed_min.getText().toString());
-                    write("traitPriorMax ", tf_observed_max.getText().toString());
+                    write("traitPriorMin ",             tf_observed_min);
+                    write("traitPriorMax ",             tf_observed_max);
                 }
                 // </editor-fold>
                 // <editor-fold defaultstate="collapsed" desc=" Section 6.4.5: Parameter Update Rates ">
                 //Model-Specific Update Rates
-                write("updateRateBeta0 ", t_model_update_rates.getValueAt(0, 1)+"");
-                write("updateRateBetaShift ", t_model_update_rates.getValueAt(1,1)+"");
-                write("updateRateNodeState ", t_model_update_rates.getValueAt(2, 1)+"");
+                write("updateRateBeta0 ",               t_model_update_rates.getValueAt(0, 1) + "");
+                write("updateRateBetaShift ",           t_model_update_rates.getValueAt(1, 1) + "");
+                write("updateRateNodeState ",           t_model_update_rates.getValueAt(2, 1) + "");
                 // </editor-fold>
             }
             // </editor-fold>
             writer.close();
             if(outputFile.isFile()) {
                 JOptionPane.showMessageDialog(null, "Output file created successfully at "+outputFile.getAbsolutePath(), 
-                        "Successful Write", JOptionPane.PLAIN_MESSAGE);
+                    "Successful Write", JOptionPane.PLAIN_MESSAGE);
             }
         } catch(IOException ioe) {
             ioe.printStackTrace();
