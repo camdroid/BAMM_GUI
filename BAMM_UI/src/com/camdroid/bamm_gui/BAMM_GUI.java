@@ -18,7 +18,10 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -35,6 +38,11 @@ public class BAMM_GUI extends javax.swing.JFrame {
     Model model;
     String FILENAME = "output.txt";
     BufferedWriter writer;
+    
+    Map<String, Component> nameToComp = new HashMap<String, Component>();
+    //Don't know whether I'll implement c2n yet...  //TODO
+    // Would be useful for importing files
+    Map<Component, String> compToName = new HashMap<Component, String>();
     /**
      * Creates new form BAMM_GUI
      */
@@ -43,6 +51,7 @@ public class BAMM_GUI extends javax.swing.JFrame {
         //Avoid complications later
         model.setModelType(ModelType.ESModel);
         initComponents();
+        initUIMap();
     }
 
     /**
@@ -878,7 +887,6 @@ public class BAMM_GUI extends javax.swing.JFrame {
     private void b_browseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b_browseActionPerformed
         browse(tf_filename);
     }//GEN-LAST:event_b_browseActionPerformed
-
     private void browse(JTextField tf) {
         JFileChooser fc = new JFileChooser();
         int returnVal = fc.showOpenDialog(this);
@@ -887,7 +895,6 @@ public class BAMM_GUI extends javax.swing.JFrame {
             tf.setText(filename);
         }
     }
-    
     private void b_writeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b_writeActionPerformed
         
         if(s_model.getSelectedIndex() == 0) {
@@ -1054,8 +1061,7 @@ public class BAMM_GUI extends javax.swing.JFrame {
 
     private void cb_mcmcActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cb_mcmcActionPerformed
         model.setRunMCMC(cb_mcmc.isSelected());
-//        l_iter.setVisible(!cb_mcmc.isSelected());
-//        tf_iterations.setVisible(!cb_mcmc.isSelected());
+        prepMapForMCMC(cb_mcmc.isSelected());
         l_iter.setEnabled(cb_mcmc.isSelected());
         tf_iterations.setEnabled(cb_mcmc.isSelected());
     }//GEN-LAST:event_cb_mcmcActionPerformed
@@ -1078,8 +1084,6 @@ public class BAMM_GUI extends javax.swing.JFrame {
         
         return results;
     }
-    
-    
     public static List<Component> getAllComponents(final Container c) {
         Component[] comps = c.getComponents();
         List<Component> compList = new ArrayList<>();
@@ -1172,15 +1176,12 @@ public class BAMM_GUI extends javax.swing.JFrame {
                         }
                         break;
                     case "runMCMC":
-//                        System.out.println("runMCMC is "+results[1]);
                         cb_mcmc.setSelected(results[1].equals("1"));
                         break;
                     case "sampleFromPriorOnly":
-//                        System.out.println("sampleFromPriorOnly is "+results[1]);
                         cb_priorOnly.setSelected(results[1].equals("1"));
                         break;
                     case "simulatePriorShifts":
-//                        System.out.println("simulatePriorShifts is "+results[1]);
                         cb_simulatePriors.setSelected(results[1].equals("1"));
                         break;
                     case "numberGenerations":
@@ -1367,6 +1368,54 @@ public class BAMM_GUI extends javax.swing.JFrame {
     private void write(String parameter, JCheckBox checkBox) {
         write(parameter, (checkBox.isSelected() ? "1" : "0"));
     }
+    private void write(String parameter, Component comp) {
+        if(comp instanceof JTextField) {
+            write(parameter, (JTextField)comp);
+        } else if(comp instanceof JCheckBox) {
+            write(parameter, (JCheckBox)comp);
+        } else {
+            System.out.println("Error: Unrecognized component");
+            JOptionPane.showMessageDialog(null, "Error: Unrecognized Component", 
+                    "Could not write", JOptionPane.ERROR);
+            return;
+        }
+    }
+    private void initUIMap() {
+        //This is going to be all done by hand - in the future, may update this
+        // to populate automatically, if I can figure that out.
+        
+        //These sections will be a bit mixed in with the sections in printToFile.
+        // e.g. some fields from 6.2.1 General will appear in printToFile, others
+        // will appear in initUIMap, purely because the ones in initUIMap can be
+        // generalized, while those in printToFile need a bit more specificity.
+        
+        //Section 6.1.1: General
+        nameToComp.put("runInfoFilename", tf_runInfo);
+        nameToComp.put("sampleFromPriorOnly", cb_priorOnly);
+        nameToComp.put("simulatePriorShifts", cb_simulatePriors);
+        nameToComp.put("initializeModel", cb_init_model);
+        nameToComp.put("overwrite", cb_overwrite);
+        
+        //Section 6.2.2: Priors
+        nameToComp.put("poissonRatePrior", tf_evp);
+    }
+    private void prepMapForMCMC(boolean on) {
+        if(on) {
+            nameToComp.put("numberGenerations", tf_iterations);
+            nameToComp.put("mcmcWriteFreq",     tf_mcmc_freq);
+            nameToComp.put("eventDataWriteFreq", tf_event_data);
+            nameToComp.put("printFreq", tf_output);
+            nameToComp.put("mcmcOutfile", tf_mcmc);
+            nameToComp.put("eventDataOutfile", tf_event_data);
+        } else {
+            nameToComp.remove("numberGenerations");
+            nameToComp.remove("mcmcWriteFreq");
+            nameToComp.remove("eventDataWriteFreq");
+            nameToComp.remove("printFreq");
+            nameToComp.remove("mcmcOutfile");
+            nameToComp.remove("eventDataOutfile");
+        }
+    }
     private void printToFile(Model model) {
         
         try {
@@ -1388,32 +1437,21 @@ public class BAMM_GUI extends javax.swing.JFrame {
             writer.newLine();
             write("modeltype", model.getModelTypeString());
             write("treefile", model.getTreeFilename());
-            write("runInfoFilename", tf_runInfo);
-            write("sampleFromPriorOnly", cb_priorOnly);
             write("autotune", "");  //No value for this yet
-            
             write("runMCMC",                ((model.getRunMCMC() ? "1" : "0")));
-            write("simulatePriorShifts",    cb_simulatePriors);
-            write("initializeModel",        cb_init_model);
             write("seed",                   (cb_clock_seed.isSelected() ? "-1" : tf_seed.getText()));
-            write("overwrite",              cb_overwrite);
 
 // </editor-fold>
                 // <editor-fold defaultstate="collapsed" desc=" Section 6.2.2: Priors ">
             //Section 6.2.2: Priors
-            write("poissonRatePrior", tf_evp);
+//            write("poissonRatePrior", tf_evp);
 
             // </editor-fold>
                 // <editor-fold defaultstate="collapsed" desc=" Section 6.2.3: MCMC Simulation ">
+            //TODO Right now, not generalizing these, since they should only
+            // appear if "Run MCMC" is checked.
             if (model.getRunMCMC()) {
-                write("numberGenerations",          tf_iterations);
-                write("mcmcWriteFreq",              tf_mcmc_freq);
-                write("eventDataWriteFreq",         tf_event_data_freq);
-                write("printFreq",                  tf_output);
-                //TODO Why are there two output names with the same value?
-                write("outName",                    tf_mcmc);
-                write("mcmcOutfile",                tf_mcmc);
-                write("eventDataOutfile",           tf_event_data);
+                prepMapForMCMC(true);
                 write("updateEventLocationScale",   t_tuning.getValueAt(0, 1) + "");
                 write("updateEventRateScale",       t_tuning.getValueAt(1, 1) + "");
                 write("localGlobalMoveRatio",       t_tuning.getValueAt(2, 1) + "");
@@ -1523,6 +1561,12 @@ public class BAMM_GUI extends javax.swing.JFrame {
                 // </editor-fold>
             }
             // </editor-fold>
+            
+            Set<String> keys = nameToComp.keySet();
+            for(String key: keys) {
+                write(key, nameToComp.get(key));
+            }
+            
             writer.close();
             if(outputFile.isFile()) {
                 JOptionPane.showMessageDialog(null, "Output file created successfully at "+outputFile.getAbsolutePath(), 
